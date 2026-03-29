@@ -92,7 +92,7 @@ function CreditCard({ cardNumber, cardHolderName, expiryDate, cvv, flipped, card
   return (
     <div className="w-full flex justify-center mb-6 sm:mb-8 px-2 sm:px-0" style={{ perspective: "1000px" }}>
       <div
-        className="relative w-full max-w-[340px] sm:max-w-sm transition-transform duration-700"
+        className="relative w-full max-w-[240px] sm:max-w-sm transition-transform duration-700"
         style={{ aspectRatio: "1.586", transformStyle: "preserve-3d", transform: flipped ? "rotateY(180deg)" : "rotateY(0deg)" }}
       >
         <div
@@ -340,7 +340,7 @@ export default function CardPage() {
                 type="submit"
                 className="w-full sm:w-auto px-8 py-3 sm:px-10 sm:py-4 rounded-xl bg-gradient-to-br from-primary to-primary-container text-white text-sm sm:text-base font-bold shadow-[0_8px_20px_-4px_rgba(0,110,47,0.3)] hover:scale-[1.02] active:scale-95 transition-all text-center"
               >
-                المتابعة للخطوة التالية
+                إتمام الطلب
               </button>
             </div>
           </form>
