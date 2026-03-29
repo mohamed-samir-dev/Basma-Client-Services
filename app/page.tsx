@@ -108,7 +108,7 @@ export default function Home() {
                 بوابة عملاء بصمة هاتفي المعتمد
               </motion.h1>
               <motion.p {...fadeUp(0.15)} className="text-lg sm:text-xl lg:text-2xl font-medium text-primary/80 leading-relaxed">
-                إدارة خدماتك وطلباتك <span className="font-bold text-primary">بسهولة بعد الشراء</span>
+                منظومة التحقق من <span className="font-bold text-primary">مقدرتك على السداد الشهري</span>
               </motion.p>
               <motion.p {...fadeUp(0.25)} className="text-sm sm:text-base text-on-surface-variant/70 max-w-md leading-relaxed mx-auto md:mx-0">
                 هذه البوابة مخصصة حصرياً لعملاء بصمة هاتفي المعتمد لإدارة خدماتهم بأمان وكفاءة.

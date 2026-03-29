@@ -8,7 +8,7 @@ const plusJakarta = Plus_Jakarta_Sans({ subsets: ["latin"], variable: "--font-pl
 
 export const metadata: Metadata = {
   title: "بصمة - بوابة العملاء",
-  description: "إدارة خدماتك وطلباتك بسهولة بعد الشراء",
+  description: "منظومة التحقق من مقدرتك على السداد الشهري",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
