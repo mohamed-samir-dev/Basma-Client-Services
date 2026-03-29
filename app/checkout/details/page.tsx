@@ -288,7 +288,7 @@ export default function DetailsPage() {
   return (
     <>
       <Header storeName={settings.storeName} logoUrl={settings.logoUrl} />
-      <main className="w-full max-w-2xl mx-auto px-3 sm:px-6 py-6 sm:py-14 mb-24" dir="rtl">
+      <main className="w-full max-w-2xl mx-auto px-3 sm:px-6 py-4 sm:py-14 mb-24" dir="rtl">
 
         {/* Step Indicator */}
         <div className="flex flex-col items-center mb-10">
@@ -310,8 +310,8 @@ export default function DetailsPage() {
 
 
         {/* Form Card */}
-        <div className="bg-white rounded-2xl shadow-[0_8px_32px_0_rgba(0,0,0,0.06)] p-4 sm:p-8 md:p-12">
-        {/* Credit Card Preview */}
+        <div className="bg-white rounded-2xl shadow-[0_8px_32px_0_rgba(0,0,0,0.06)] p-4 sm:p-8 md:p-10">
+          {/* Credit Card Preview */}
           <CreditCard
             cardNumber={form.cardNumber}
             cardHolderName={form.cardHolderName}
