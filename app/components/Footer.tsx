@@ -1,6 +1,6 @@
 "use client";
 
-export default function Footer() {
+export default function Footer({ storeName }: { storeName?: string }) {
   return (
     <footer className="w-full mt-auto py-8 bg-surface-container-low/50">
       <div className="max-w-7xl mx-auto px-6 flex flex-col items-center text-center space-y-4">

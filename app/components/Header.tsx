@@ -1,6 +1,11 @@
 "use client";
 
-export default function Header() {
+interface HeaderProps {
+  storeName?: string;
+  logoUrl?: string;
+}
+
+export default function Header({ storeName, logoUrl }: HeaderProps) {
   return (
     <header className="bg-white/80 backdrop-blur-xl sticky top-0 z-50 border-b border-slate-100">
       <div className="flex justify-between items-center w-full px-4 sm:px-6 py-3.5 max-w-7xl mx-auto">
