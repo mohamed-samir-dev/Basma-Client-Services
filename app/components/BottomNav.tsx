@@ -8,10 +8,6 @@ export default function BottomNav() {
         <span className="font-['DM_Sans'] text-[11px] font-medium mt-1">الرئيسية</span>
       </div>
       <div className="flex flex-col items-center justify-center text-slate-400 px-5 py-2 hover:text-green-600 transition-colors">
-        <span className="material-symbols-outlined">payments</span>
-        <span className="font-['DM_Sans'] text-[11px] font-medium mt-1">المدفوعات</span>
-      </div>
-      <div className="flex flex-col items-center justify-center text-slate-400 px-5 py-2 hover:text-green-600 transition-colors">
         <span className="material-symbols-outlined">contact_support</span>
         <span className="font-['DM_Sans'] text-[11px] font-medium mt-1">الدعم</span>
       </div>
