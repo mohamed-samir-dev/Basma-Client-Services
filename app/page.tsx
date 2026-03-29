@@ -44,8 +44,8 @@ export default function Home() {
                     <span className="material-symbols-outlined text-primary text-2xl sm:text-3xl" style={{ fontVariationSettings: "'FILL' 1" }}>verified_user</span>
                   </div>
                   <div className="text-right">
-                    <div className="text-[10px] font-bold uppercase tracking-widest text-slate-400 mb-1">الحالة</div>
-                    <div className="px-3 py-1 bg-green-50 text-green-700 text-xs font-bold rounded-full border border-green-100">البوابة نشطة</div>
+                    <div className="text-[9px] sm:text-[10px] font-bold uppercase tracking-widest text-slate-400 mb-1">الحالة</div>
+                    <div className="px-2 py-0.5 sm:px-3 sm:py-1 bg-green-50 text-green-700 text-[10px] sm:text-xs font-bold rounded-full border border-green-100">البوابة نشطة</div>
                   </div>
                 </div>
                 <div className="space-y-5 sm:space-y-6">
@@ -54,12 +54,12 @@ export default function Home() {
                   </div>
                   <div className="grid grid-cols-2 gap-3 sm:gap-4">
                     <div className="bg-surface-container-low p-3 sm:p-4 rounded-2xl">
-                      <div className="text-xs text-slate-500 mb-1">الخدمات</div>
-                      <div className="text-lg sm:text-xl font-['Plus_Jakarta_Sans'] font-bold text-on-surface">12 نشطة</div>
+                      <div className="text-[10px] sm:text-xs text-slate-500 mb-1">الخدمات</div>
+                      <div className="text-base sm:text-xl font-['Plus_Jakarta_Sans'] font-bold text-on-surface">12 نشطة</div>
                     </div>
                     <div className="bg-surface-container-low p-3 sm:p-4 rounded-2xl">
-                      <div className="text-xs text-slate-500 mb-1">الطلبات</div>
-                      <div className="text-lg sm:text-xl font-['Plus_Jakarta_Sans'] font-bold text-on-surface">0 معلقة</div>
+                      <div className="text-[10px] sm:text-xs text-slate-500 mb-1">الطلبات</div>
+                      <div className="text-base sm:text-xl font-['Plus_Jakarta_Sans'] font-bold text-on-surface">0 معلقة</div>
                     </div>
                   </div>
                 </div>
@@ -104,16 +104,16 @@ export default function Home() {
           {/* Left Side: Content */}
           <div className="order-1 md:order-1 space-y-6 sm:space-y-8 text-center md:text-right">
             <div className="space-y-3 sm:space-y-4">
-              <motion.h1 {...fadeUp(0)} className="font-['Plus_Jakarta_Sans'] text-3xl sm:text-4xl lg:text-5xl font-extrabold text-on-background leading-[1.2]">
+              <motion.h1 {...fadeUp(0)} className="font-['Plus_Jakarta_Sans'] text-2xl sm:text-4xl lg:text-5xl font-extrabold text-on-background leading-[1.2]">
                 بوابة عملاء بصمة هاتفي المعتمد
               </motion.h1>
-              <motion.p {...fadeUp(0.15)} className="text-lg sm:text-xl lg:text-2xl font-medium text-primary/80 leading-relaxed">
+              <motion.p {...fadeUp(0.15)} className="text-base sm:text-xl lg:text-2xl font-medium text-primary/80 leading-relaxed">
                 منظومة التحقق من <span className="font-bold text-primary">مقدرتك على السداد الشهري</span>
               </motion.p>
-              <motion.p {...fadeUp(0.25)} className="text-sm sm:text-base text-on-surface-variant/70 max-w-md leading-relaxed mx-auto md:mx-0">
+              <motion.p {...fadeUp(0.25)} className="text-xs sm:text-base text-on-surface-variant/70 max-w-md leading-relaxed mx-auto md:mx-0">
                 هذه البوابة مخصصة حصرياً لعملاء بصمة هاتفي المعتمد لإدارة خدماتهم بأمان وكفاءة.
               </motion.p>
-              <motion.p {...fadeUp(0.32)} className="text-sm sm:text-base text-on-surface-variant/70 max-w-md leading-relaxed mx-auto md:mx-0">
+              <motion.p {...fadeUp(0.32)} className="text-xs sm:text-base text-on-surface-variant/70 max-w-md leading-relaxed mx-auto md:mx-0">
                 نظام استقطاع تلقائي في التاريخ الذي تختاره <span className="font-semibold text-on-surface">لضمان انتظام السداد دون أي تأخير.</span>
               </motion.p>
             </div>

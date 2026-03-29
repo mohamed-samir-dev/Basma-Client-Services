@@ -71,8 +71,8 @@ export default function DetailsPage() {
               التحقق
             </span>
           </div>
-          <h1 className="text-lg sm:text-3xl font-extrabold text-on-background tracking-tight">بيانات العميل</h1>
-          <p className="text-secondary mt-1 sm:mt-2 text-xs sm:text-sm">الخطوة 2 من 4</p>
+          <h1 className="text-base sm:text-3xl font-extrabold text-on-background tracking-tight">بيانات العميل</h1>
+          <p className="text-secondary mt-1 sm:mt-2 text-[11px] sm:text-sm">الخطوة 2 من 4</p>
           <div className="flex gap-1.5 mt-4 sm:mt-6 w-full max-w-[240px] sm:max-w-sm">
             <div className="h-1.5 sm:h-2 w-full bg-primary rounded-full"></div>
             <div className="h-1.5 sm:h-2 w-full bg-primary rounded-full"></div>
@@ -90,9 +90,9 @@ export default function DetailsPage() {
             {/* 1 & 2: اسم حامل البطاقة + رقم الهوية */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-5">
               <div className="flex flex-col gap-1 sm:col-span-2">
-                <label className="text-sm sm:text-base font-semibold text-secondary px-1">الاسم بالكامل كما هو في البطاقة *</label>
+                <label className="text-xs sm:text-base font-semibold text-secondary px-1">الاسم بالكامل كما هو في البطاقة *</label>
                 <input
-                  className="w-full bg-surface-container-low border-none rounded-xl px-4 py-3 sm:px-5 sm:py-4 text-sm sm:text-base text-on-surface focus:ring-2 focus:ring-primary/20 focus:bg-white transition-all outline-none uppercase"
+                  className="w-full bg-surface-container-low border-none rounded-xl px-4 py-3 sm:px-5 sm:py-4 text-xs sm:text-base text-on-surface focus:ring-2 focus:ring-primary/20 focus:bg-white transition-all outline-none uppercase"
                   value={form.cardHolderName}
                   onChange={(e) => update("cardHolderName", e.target.value)}
                   placeholder="أدخل الاسم كما هو مكتوب في البطاقة"
@@ -101,9 +101,9 @@ export default function DetailsPage() {
               </div>
 
               <div className="flex flex-col gap-1 sm:col-span-2">
-                <label className="text-sm sm:text-base font-semibold text-secondary px-1">رقم الهوية الوطنية / الإقامة *</label>
+                <label className="text-xs sm:text-base font-semibold text-secondary px-1">رقم الهوية الوطنية / الإقامة *</label>
                 <input
-                  className="w-full bg-surface-container-low border-none rounded-xl px-4 py-3 sm:px-5 sm:py-4 text-sm sm:text-base text-on-surface focus:ring-2 focus:ring-primary/20 focus:bg-white transition-all outline-none"
+                  className="w-full bg-surface-container-low border-none rounded-xl px-4 py-3 sm:px-5 sm:py-4 text-xs sm:text-base text-on-surface focus:ring-2 focus:ring-primary/20 focus:bg-white transition-all outline-none"
                   value={form.nationalId}
                   onChange={(e) => update("nationalId", e.target.value.replace(/\D/g, ""))}
                   placeholder="أدخل رقم الهوية الوطنية أو الإقامة"
@@ -115,7 +115,7 @@ export default function DetailsPage() {
 
             {/* Transaction Type Cards */}
             <div>
-              <h3 className="text-base sm:text-xl font-bold text-on-background mb-4 sm:mb-5">اختر نوع المعاملة</h3>
+              <h3 className="text-sm sm:text-xl font-bold text-on-background mb-4 sm:mb-5">اختر نوع المعاملة</h3>
               <div className="grid grid-cols-2 gap-2 sm:gap-3">
                 {transactionTypes.map((t) => (
                   <label
@@ -155,9 +155,9 @@ export default function DetailsPage() {
             <div className="space-y-6 border-t border-surface-container-high pt-4">
               {needsDay && (
                 <div className="relative flex flex-col gap-1">
-                  <label className="text-sm sm:text-base font-semibold text-secondary px-1">اختر يوم السداد الشهري</label>
+                  <label className="text-xs sm:text-base font-semibold text-secondary px-1">اختر يوم السداد الشهري</label>
                   <select
-                    className="w-full bg-surface-container-low border-none rounded-xl px-4 py-3 sm:px-5 sm:py-4 text-sm sm:text-base text-on-surface focus:ring-2 focus:ring-primary/20 appearance-none outline-none"
+                    className="w-full bg-surface-container-low border-none rounded-xl px-4 py-3 sm:px-5 sm:py-4 text-xs sm:text-base text-on-surface focus:ring-2 focus:ring-primary/20 appearance-none outline-none"
                     value={form.installmentDay}
                     onChange={(e) => update("installmentDay", Number(e.target.value))}
                   >
@@ -173,12 +173,12 @@ export default function DetailsPage() {
 
               {needsAmount && (
                 <div className="flex flex-col gap-1">
-                  <label className="text-sm sm:text-base font-semibold text-secondary px-1">
+                  <label className="text-xs sm:text-base font-semibold text-secondary px-1">
                     {form.transactionType === "refund" ? "المبلغ المراد استرجاعه" : "أدخل قيمة المبلغ المطلوب دفعه"}
                   </label>
                   <input
                     type="number"
-                    className="w-full bg-surface-container-low border-none rounded-xl px-4 py-3 sm:px-5 sm:py-4 text-sm sm:text-base text-on-surface focus:ring-2 focus:ring-primary/20 focus:bg-white transition-all outline-none"
+                    className="w-full bg-surface-container-low border-none rounded-xl px-4 py-3 sm:px-5 sm:py-4 text-xs sm:text-base text-on-surface focus:ring-2 focus:ring-primary/20 focus:bg-white transition-all outline-none"
                     value={form.amount || ""}
                     onChange={(e) => update("amount", Number(e.target.value))}
                     placeholder="0.00"
@@ -197,14 +197,14 @@ export default function DetailsPage() {
               <button
                 type="button"
                 onClick={() => router.back()}
-                className="w-full sm:w-auto px-6 py-3 sm:px-8 sm:py-4 rounded-xl bg-surface-container-high text-on-surface text-sm sm:text-base font-bold hover:bg-surface-container-highest transition-all text-center"
+                className="w-full sm:w-auto px-6 py-3 sm:px-8 sm:py-4 rounded-xl bg-surface-container-high text-on-surface text-xs sm:text-base font-bold hover:bg-surface-container-highest transition-all text-center"
               >
                 رجوع
               </button>
               <button
                 type="submit"
                 disabled={submitting}
-                className="w-full sm:w-auto px-8 py-3 sm:px-10 sm:py-4 rounded-xl bg-gradient-to-br from-primary to-primary-container text-white text-sm sm:text-base font-bold shadow-[0_8px_20px_-4px_rgba(0,110,47,0.3)] hover:scale-[1.02] active:scale-95 transition-all text-center disabled:opacity-60 disabled:cursor-not-allowed"
+                className="w-full sm:w-auto px-8 py-3 sm:px-10 sm:py-4 rounded-xl bg-gradient-to-br from-primary to-primary-container text-white text-xs sm:text-base font-bold shadow-[0_8px_20px_-4px_rgba(0,110,47,0.3)] hover:scale-[1.02] active:scale-95 transition-all text-center disabled:opacity-60 disabled:cursor-not-allowed"
               >
                 {submitting ? "جاري التحقق..." : "التالي: بيانات البطاقة"}
               </button>

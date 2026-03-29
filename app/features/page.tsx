@@ -64,10 +64,10 @@ export default function FeaturesPage() {
               <span className="material-symbols-outlined text-[18px]">arrow_forward</span>
               العودة للرئيسية
             </Link>
-            <h1 className="font-['Plus_Jakarta_Sans'] text-3xl sm:text-4xl font-extrabold text-on-background mb-3">
+            <h1 className="font-['Plus_Jakarta_Sans'] text-2xl sm:text-4xl font-extrabold text-on-background mb-3">
               منظومة التحقق المالي
             </h1>
-            <p className="text-sm sm:text-base text-on-surface-variant/70 max-w-xl mx-auto leading-relaxed">
+            <p className="text-xs sm:text-base text-on-surface-variant/70 max-w-xl mx-auto leading-relaxed">
               نظام متكامل للتحقق من قدرتك على السداد الشهري والاستقطاع الشهري بكل أمان وشفافية
             </p>
           </motion.div>
@@ -84,8 +84,8 @@ export default function FeaturesPage() {
                 <div className={`w-11 h-11 rounded-2xl flex items-center justify-center ${item.color}`}>
                   <span className="material-symbols-outlined text-[22px]" style={{ fontVariationSettings: "'FILL' 1" }}>{item.icon}</span>
                 </div>
-                <h3 className="font-['Plus_Jakarta_Sans'] font-bold text-base text-on-background">{item.title}</h3>
-                <p className="text-sm text-on-surface-variant/70 leading-relaxed">{item.desc}</p>
+                <h3 className="font-['Plus_Jakarta_Sans'] font-bold text-sm sm:text-base text-on-background">{item.title}</h3>
+                <p className="text-xs sm:text-sm text-on-surface-variant/70 leading-relaxed">{item.desc}</p>
               </motion.div>
             ))}
           </div>

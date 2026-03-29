@@ -258,10 +258,9 @@ export default function CardPage() {
               cardType={cardType}
             />
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-5">
+            <div className="grid grid-cols-2 gap-x-6 gap-y-5">
 
-              <div className="flex flex-col gap-1 sm:col-span-2">
-                <label className="text-sm sm:text-base font-semibold text-secondary px-1">اسم حامل البطاقة *</label>
+<div className="flex flex-col gap-1 col-span-2">
                 <input
                   className={`w-full bg-surface-container-low border-none rounded-xl px-4 py-3 sm:px-5 sm:py-4 text-sm sm:text-base text-on-surface focus:ring-2 focus:bg-white transition-all outline-none uppercase ${
                     touched.cardHolderName && !card.cardHolderName ? "ring-2 ring-error/40" : "focus:ring-primary/20"
@@ -277,7 +276,7 @@ export default function CardPage() {
                 )}
               </div>
 
-              <div className="flex flex-col gap-1 sm:col-span-2" dir="ltr">
+<div className="flex flex-col gap-1 col-span-2" dir="ltr">
                 <label className="text-sm sm:text-base font-semibold text-secondary px-1" dir="rtl">رقم البطاقة *</label>
                 <CardNumberInput
                   value={card.cardNumber}
