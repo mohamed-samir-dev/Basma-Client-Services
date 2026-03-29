@@ -119,6 +119,7 @@ export default function Home() {
             </div>
 
             <motion.div {...fadeUp(0.35)} className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center md:justify-start">
+              <Link href="/checkout/verify">
               <motion.button
                 whileHover={{ scale: 1.03 }}
                 whileTap={{ scale: 0.97 }}
@@ -127,6 +128,7 @@ export default function Home() {
                 ابدأ الآن
                 <span className="material-symbols-outlined text-[20px] group-hover:-translate-x-1 transition-transform">arrow_back</span>
               </motion.button>
+              </Link>
               <Link href="/features">
               <motion.button
                 whileHover={{ scale: 1.03 }}
