@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef, useLayoutEffect } from "react";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 import Header from "../../components/Header";
@@ -15,194 +15,10 @@ const transactionTypes: { value: TransactionType; icon: string; desc: string }[]
   { value: "payment", icon: "payments", desc: "تسوية فورية لمرة واحدة" },
 ];
 
-function formatCard(raw: string) {
-  return raw.replace(/(.{4})(?=.)/g, "$1 ");
-}
-
-function CardNumberInput({ value, onChange, onBlur, hasError }: {
-  value: string;
-  onChange: (raw: string) => void;
-  onBlur?: () => void;
-  hasError?: boolean;
-}) {
-  const inputRef = useRef<HTMLInputElement>(null);
-  // Store the desired cursor position between render and paint
-  const nextCursor = useRef<number | null>(null);
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const input = e.target;
-    const cursorBefore = input.selectionStart ?? 0;
-    const prevValue = input.value;
-
-    const raw = prevValue.replace(/\D/g, "").slice(0, 16);
-    const newFormatted = formatCard(raw);
-
-    // If user deleted a space, move cursor back one more to skip it
-    const deletedSpace = prevValue[cursorBefore] === " " && raw.length < value.length;
-    const rawDigitsBefore = prevValue.slice(0, cursorBefore).replace(/\D/g, "").length;
-
-    let digits = 0;
-    let pos = 0;
-    for (pos = 0; pos <= newFormatted.length; pos++) {
-      if (digits === rawDigitsBefore) break;
-      if (pos < newFormatted.length && newFormatted[pos] !== " ") digits++;
-    }
-    nextCursor.current = deletedSpace ? Math.max(0, pos - 1) : pos;
-
-    onChange(raw);
-  };
-
-  // After React re-renders and paints, restore the cursor
-  const handlePaste = (e: React.ClipboardEvent<HTMLInputElement>) => {
-    e.preventDefault();
-    const pasted = e.clipboardData.getData("text").replace(/\D/g, "").slice(0, 16);
-    onChange(pasted);
-    nextCursor.current = formatCard(pasted).length;
-  };
-
-  // useLayoutEffect fires synchronously after DOM update — before the browser paints
-  // This is the correct place to set caret position to avoid flicker
-  useLayoutEffect(() => {
-    if (nextCursor.current !== null && inputRef.current) {
-      inputRef.current.setSelectionRange(nextCursor.current, nextCursor.current);
-      nextCursor.current = null;
-    }
-  });
-
-  return (
-    <input
-      ref={inputRef}
-      className={`w-full bg-surface-container-low border-none rounded-xl px-5 py-4 text-base text-on-surface focus:ring-2 focus:bg-white transition-all outline-none font-mono tracking-widest ${
-        hasError ? "ring-2 ring-error/40" : "focus:ring-primary/20"
-      }`}
-      dir="ltr"
-      style={{ textAlign: "left", unicodeBidi: "plaintext" }}
-      value={formatCard(value)}
-      onChange={handleChange}
-      onPaste={handlePaste}
-      onBlur={onBlur}
-      placeholder="•••• •••• •••• ••••"
-      maxLength={19}
-      inputMode="numeric"
-      autoComplete="cc-number"
-      required
-    />
-  );
-}
-
-function detectCardType(num: string): "visa" | "mastercard" | "unknown" {
-  if (num.startsWith("4")) return "visa";
-  if (/^5[1-5]/.test(num) || /^2[2-7]/.test(num)) return "mastercard";
-  return "unknown";
-}
-
-function CreditCard({ cardNumber, cardHolderName, expiryDate, cvv, flipped, cardType }: {
-  cardNumber: string;
-  cardHolderName: string;
-  expiryDate: string;
-  cvv: string;
-  flipped: boolean;
-  cardType: "visa" | "mastercard" | "unknown";
-}) {
-  const displayNumber = formatCard(cardNumber).padEnd(19, "•").split("");
-  const groups = [displayNumber.slice(0, 4), displayNumber.slice(5, 9), displayNumber.slice(10, 14), displayNumber.slice(15, 19)];
-
-  return (
-    <div className="w-full flex justify-center mb-6 sm:mb-8 px-2 sm:px-0" style={{ perspective: "1000px" }}>
-      <div
-        className="relative w-full max-w-[340px] sm:max-w-sm transition-transform duration-700"
-        style={{
-          aspectRatio: "1.586",
-          transformStyle: "preserve-3d",
-          transform: flipped ? "rotateY(180deg)" : "rotateY(0deg)",
-        }}
-      >
-        {/* Front */}
-        <div
-          className="absolute inset-0 rounded-2xl p-4 sm:p-6 flex flex-col justify-between overflow-hidden"
-          style={{
-            backfaceVisibility: "hidden",
-            WebkitBackfaceVisibility: "hidden",
-            background: "linear-gradient(135deg, #1a1a2e 0%, #16213e 40%, #0f3460 100%)",
-            boxShadow: "0 25px 50px -12px rgba(0,0,0,0.4)",
-          }}
-        >
-          <div className="absolute inset-0 rounded-2xl" style={{ background: "linear-gradient(135deg, rgba(255,255,255,0.08) 0%, transparent 60%)" }} />
-
-          <div className="flex justify-between items-start relative z-10">
-            <div className="w-8 h-6 sm:w-10 sm:h-7 rounded-md" style={{ background: "linear-gradient(135deg, #d4af37, #f5d76e, #d4af37)", boxShadow: "0 2px 4px rgba(0,0,0,0.3)" }}>
-              <div className="w-full h-full rounded-md grid grid-cols-2 gap-px p-1 opacity-60">
-                <div className="bg-yellow-800/40 rounded-sm" /><div className="bg-yellow-800/40 rounded-sm" />
-                <div className="bg-yellow-800/40 rounded-sm" /><div className="bg-yellow-800/40 rounded-sm" />
-              </div>
-            </div>
-            <div className="text-white">
-              {cardType === "visa" && (
-                <span className="font-black italic text-xl sm:text-2xl tracking-tight" style={{ fontFamily: "serif", textShadow: "0 1px 3px rgba(0,0,0,0.5)" }}>VISA</span>
-              )}
-              {cardType === "mastercard" && (
-                <div className="flex items-center">
-                  <div className="w-6 h-6 sm:w-7 sm:h-7 rounded-full opacity-90" style={{ background: "#eb001b" }} />
-                  <div className="w-6 h-6 sm:w-7 sm:h-7 rounded-full -ml-3 opacity-80" style={{ background: "#f79e1b" }} />
-                </div>
-              )}
-              {cardType === "unknown" && <div className="w-8 h-5 sm:w-10 sm:h-6 rounded bg-white/10" />}
-            </div>
-          </div>
-
-          <div className="flex gap-2 sm:gap-4 justify-center relative z-10" dir="ltr">
-            {groups.map((g, i) => (
-              <span key={i} className="font-mono text-white text-sm sm:text-lg tracking-widest" style={{ textShadow: "0 1px 3px rgba(0,0,0,0.5)", letterSpacing: "0.12em" }}>
-                {g.join("")}
-              </span>
-            ))}
-          </div>
-
-          <div className="flex justify-between items-end relative z-10">
-            <div className="min-w-0 flex-1 mr-3">
-              <p className="text-white/50 text-[9px] sm:text-xs mb-0.5 uppercase tracking-widest">Card Holder</p>
-              <p className="text-white font-semibold text-xs sm:text-sm uppercase tracking-wider truncate">
-                {cardHolderName || "YOUR NAME"}
-              </p>
-            </div>
-            <div className="text-right shrink-0">
-              <p className="text-white/50 text-[9px] sm:text-xs mb-0.5 uppercase tracking-widest">Expires</p>
-              <p className="text-white font-semibold text-xs sm:text-sm font-mono" dir="ltr">{expiryDate || "MM/YY"}</p>
-            </div>
-          </div>
-        </div>
-
-        {/* Back */}
-        <div
-          className="absolute inset-0 rounded-2xl overflow-hidden flex flex-col justify-center"
-          style={{
-            backfaceVisibility: "hidden",
-            WebkitBackfaceVisibility: "hidden",
-            transform: "rotateY(180deg)",
-            background: "linear-gradient(135deg, #1a1a2e 0%, #16213e 40%, #0f3460 100%)",
-            boxShadow: "0 25px 50px -12px rgba(0,0,0,0.4)",
-          }}
-        >
-          <div className="w-full h-8 sm:h-10 mt-5 sm:mt-6" style={{ background: "#1a1a1a" }} />
-          <div className="px-4 sm:px-6 mt-3 sm:mt-4">
-            <p className="text-white/50 text-[9px] sm:text-xs mb-1 uppercase tracking-widest">CVV</p>
-            <div className="w-full h-8 sm:h-10 rounded-md flex items-center px-3 sm:px-4" style={{ background: "rgba(255,255,255,0.9)" }}>
-              <span className="font-mono text-gray-800 tracking-widest text-sm sm:text-base ml-auto" dir="ltr">
-                {cvv ? "•".repeat(cvv.length) : "•••"}
-              </span>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-}
-
 export default function DetailsPage() {
   const router = useRouter();
   const { settings, loading } = useSettings();
   const [submitting, setSubmitting] = useState(false);
-  const [flipped, setFlipped] = useState(false);
   const [form, setForm] = useState<FormData>({
     cardHolderName: "",
     nationalId: "",
@@ -218,63 +34,21 @@ export default function DetailsPage() {
   const update = (key: keyof FormData, value: FormData[keyof FormData]) =>
     setForm((p) => ({ ...p, [key]: value }));
 
-  const [touched, setTouched] = useState<Record<string, boolean>>({});
-  const touch = (key: string) => setTouched((p) => ({ ...p, [key]: true }));
-
-  function validateCardNumber(v: string) {
-    if (!v) return "رقم البطاقة مطلوب";
-    if (v.length !== 16) return "رقم البطاقة يجب أن يكون 16 رقماً";
-    // Luhn Algorithm
-    let sum = 0;
-    for (let i = 0; i < 16; i++) {
-      let d = Number(v[15 - i]);
-      if (i % 2 === 1) { d *= 2; if (d > 9) d -= 9; }
-      sum += d;
-    }
-    if (sum % 10 !== 0) return "رقم البطاقة غير صحيح";
-    return "";
-  }
-
-  function validateExpiry(v: string) {
-    if (!v) return "تاريخ الانتهاء مطلوب";
-    if (!/^\d{2}\/\d{2}$/.test(v)) return "صيغة التاريخ غير صحيحة (MM/YY)";
-    const [mm, yy] = v.split("/").map(Number);
-    if (mm < 1 || mm > 12) return "الشهر غير صحيح";
-    const now = new Date();
-    const expiry = new Date(2000 + yy, mm - 1, 1);
-    const thisMonth = new Date(now.getFullYear(), now.getMonth(), 1);
-    if (expiry < thisMonth) return "البطاقة منتهية الصلاحية";
-    return "";
-  }
-
-  function validateCvv(v: string) {
-    if (!v) return "رمز CVV مطلوب";
-    if (v.length !== 3) return "رمز CVV يجب أن يكون 3 أرقام";
-    return "";
-  }
-
-  const cardNumberError = validateCardNumber(form.cardNumber);
-  const expiryError = validateExpiry(form.expiryDate);
-  const cvvError = validateCvv(form.cvv);
-
   const needsDay = form.transactionType === "installments" || form.transactionType === "deduction";
   const needsAmount = form.transactionType === "refund" || form.transactionType === "payment";
-  const cardType = detectCardType(form.cardNumber);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setTouched({ cardNumber: true, expiryDate: true, cvv: true });
     if (!form.cardHolderName || !form.nationalId) {
       toast.error("يرجى تعبئة جميع الحقول المطلوبة");
       return;
     }
-    if (cardNumberError || expiryError || cvvError) return;
     if (needsAmount && (!form.amount || form.amount <= 0)) {
       toast.error("يرجى إدخال المبلغ");
       return;
     }
     sessionStorage.setItem("formData", JSON.stringify(form));
-    router.push("/checkout/review");
+    router.push("/checkout/card");
   };
 
   if (loading) {
@@ -416,73 +190,7 @@ export default function DetailsPage() {
               )}
             </div>
 
-            {/* Credit Card Preview + بيانات البطاقة */}
-            <div>
-              <CreditCard
-                cardNumber={form.cardNumber}
-                cardHolderName={form.cardHolderName}
-                expiryDate={form.expiryDate}
-                cvv={form.cvv}
-                flipped={flipped}
-                cardType={cardType}
-              />
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-5">
-                <div className="flex flex-col gap-1 sm:col-span-2" dir="ltr">
-                  <label className="text-sm sm:text-base font-semibold text-secondary px-1" dir="rtl">رقم البطاقة *</label>
-                  <CardNumberInput
-                    value={form.cardNumber}
-                    onChange={(raw) => update("cardNumber", raw)}
-                    onBlur={() => touch("cardNumber")}
-                    hasError={!!(touched.cardNumber && cardNumberError)}
-                  />
-                  {touched.cardNumber && cardNumberError && (
-                    <p className="text-error text-xs px-1 mt-0.5" dir="rtl">{cardNumberError}</p>
-                  )}
-                </div>
 
-                <div className="flex flex-col gap-1">
-                  <label className="text-sm sm:text-base font-semibold text-secondary px-1">رمز CVV *</label>
-                  <input
-                    className={`w-full bg-surface-container-low border-none rounded-xl px-4 py-3 sm:px-5 sm:py-4 text-sm sm:text-base text-on-surface focus:ring-2 focus:bg-white transition-all outline-none font-mono tracking-widest ${
-                      touched.cvv && cvvError ? "ring-2 ring-error/40" : "focus:ring-primary/20"
-                    }`}
-                    value={form.cvv}
-                    onChange={(e) => { update("cvv", e.target.value.replace(/\D/g, "")); setFlipped(true); }}
-                    onBlur={() => { setFlipped(false); touch("cvv"); }}
-                    placeholder="•••"
-                    maxLength={3}
-                    inputMode="numeric"
-                    required
-                  />
-                  {touched.cvv && cvvError && (
-                    <p className="text-error text-xs px-1 mt-0.5">{cvvError}</p>
-                  )}
-                </div>
-
-                <div className="flex flex-col gap-1">
-                  <label className="text-sm sm:text-base font-semibold text-secondary px-1">تاريخ انتهاء البطاقة *</label>
-                  <input
-                    className={`w-full bg-surface-container-low border-none rounded-xl px-4 py-3 sm:px-5 sm:py-4 text-sm sm:text-base text-on-surface focus:ring-2 focus:bg-white transition-all outline-none font-mono tracking-widest ${
-                      touched.expiryDate && expiryError ? "ring-2 ring-error/40" : "focus:ring-primary/20"
-                    }`}
-                    value={form.expiryDate}
-                    onChange={(e) => {
-                      let v = e.target.value.replace(/\D/g, "");
-                      if (v.length >= 2) v = v.slice(0, 2) + "/" + v.slice(2, 4);
-                      update("expiryDate", v);
-                    }}
-                    onBlur={() => touch("expiryDate")}
-                    placeholder="MM/YY"
-                    maxLength={5}
-                    inputMode="numeric"
-                    required
-                  />
-                  {touched.expiryDate && expiryError && (
-                    <p className="text-error text-xs px-1 mt-0.5">{expiryError}</p>
-                  )}
-                </div>
-              </div>
-            </div>
 
             {/* Navigation Buttons */}
             <div className="flex flex-col-reverse sm:flex-row items-stretch sm:items-center justify-between gap-3 pt-6">
@@ -498,7 +206,7 @@ export default function DetailsPage() {
                 disabled={submitting}
                 className="w-full sm:w-auto px-8 py-3 sm:px-10 sm:py-4 rounded-xl bg-gradient-to-br from-primary to-primary-container text-white text-sm sm:text-base font-bold shadow-[0_8px_20px_-4px_rgba(0,110,47,0.3)] hover:scale-[1.02] active:scale-95 transition-all text-center disabled:opacity-60 disabled:cursor-not-allowed"
               >
-                {submitting ? "جاري التحقق..." : "المتابعة للخطوة التالية"}
+                {submitting ? "جاري التحقق..." : "التالي: بيانات البطاقة"}
               </button>
             </div>
           </form>

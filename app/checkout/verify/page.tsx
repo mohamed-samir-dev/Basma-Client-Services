@@ -21,7 +21,7 @@ export default function VerifyPage() {
   return (
     <>
       <Header storeName={settings.storeName} logoUrl={settings.logoUrl} />
-      <main className="min-h-screen flex items-center justify-center px-3 py-6 sm:px-4 sm:py-10 mb-16" dir="rtl">
+      <main className="min-h-screen flex items-center justify-center px-3 pt-2 pb-6 sm:px-4 sm:pt-3 sm:pb-10 mb-16" dir="rtl">
         <div className="w-full max-w-2xl flex flex-col items-center gap-5 sm:gap-7">
 
           {/* Step bar */}
