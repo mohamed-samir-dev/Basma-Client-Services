@@ -1,4 +1,5 @@
 "use client";
+import Link from "next/link";
 
 interface HeaderProps {
   storeName?: string;
@@ -16,7 +17,7 @@ export default function Header({ storeName, logoUrl }: HeaderProps) {
           <span className="text-base sm:text-xl font-extrabold text-green-800 tracking-tight font-['Plus_Jakarta_Sans'] leading-tight">بصمة هاتفي المعتمد</span>
         </div>
         <nav className="hidden md:flex items-center gap-1">
-          <a className="font-['Plus_Jakarta_Sans'] font-bold text-sm tracking-tight text-green-700 bg-green-50 px-4 py-2 rounded-xl" href="#">الرئيسية</a>
+          <Link className="font-['Plus_Jakarta_Sans'] font-bold text-sm tracking-tight text-green-700 bg-green-50 px-4 py-2 rounded-xl" href="/">الرئيسية</Link>
           <a className="font-['Plus_Jakarta_Sans'] font-semibold text-sm tracking-tight text-slate-500 hover:text-green-600 hover:bg-slate-50 transition-all duration-200 px-4 py-2 rounded-xl" href="#">الدعم</a>
           <div className="w-px h-6 bg-slate-200 mx-2"></div>
           <button className="p-2 rounded-xl hover:bg-slate-50 transition-all text-slate-400 hover:text-slate-600">
