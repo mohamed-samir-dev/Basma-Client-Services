@@ -36,6 +36,9 @@
   word-wrap: normal;
   white-space: nowrap;
   direction: ltr;
+  font-size: 24px;
+  user-select: none;
+  overflow: hidden;
 }
 
 .bg-glass {
