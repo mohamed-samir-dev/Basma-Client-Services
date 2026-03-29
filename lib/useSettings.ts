@@ -19,7 +19,7 @@ const defaults: SiteSettings = {
 
 export function useSettings() {
   const [settings, setSettings] = useState<SiteSettings>(defaults);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     fetch("/api/settings")
