@@ -23,8 +23,8 @@
   --color-error: #ba1a1a;
   --color-tertiary: #9e4036;
   --color-tertiary-container: #ff8b7c;
-  --font-family-headline: 'Plus Jakarta Sans', sans-serif;
-  --font-family-body: 'DM Sans', sans-serif;
+  --font-family-headline: var(--font-plus-jakarta), 'Plus Jakarta Sans', sans-serif;
+  --font-family-body: var(--font-dm-sans), 'DM Sans', sans-serif;
 }
 
 .material-symbols-outlined {
@@ -55,7 +55,7 @@
 body {
   background: var(--color-surface);
   color: var(--color-on-background);
-  font-family: 'DM Sans', sans-serif;
+  font-family: var(--font-dm-sans), 'DM Sans', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
