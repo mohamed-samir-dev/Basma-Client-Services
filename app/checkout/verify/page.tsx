@@ -38,7 +38,7 @@ export default function VerifyPage() {
           </div>
 
           {/* Card */}
-          <div className="w-full bg-white rounded-2xl shadow-[0_8px_32px_0_rgba(0,0,0,0.06)] p-5 sm:p-10 flex flex-col items-center gap-6 sm:gap-8">
+          <div className="w-full bg-white rounded-2xl shadow-[0_8px_32px_0_rgba(0,0,0,0.06)] p-4 sm:p-6 flex flex-col items-center gap-3 sm:gap-5">
 
             {/* Verified badge */}
             <div className="flex items-center justify-center gap-3 w-full bg-primary/5 rounded-2xl py-4 px-5">

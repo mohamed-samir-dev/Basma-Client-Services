@@ -220,7 +220,7 @@ export default function CardPage() {
     if (!saved) return;
     const merged: FormData = { ...JSON.parse(saved), ...card };
     sessionStorage.setItem("formData", JSON.stringify(merged));
-    router.push("/checkout/review");
+    router.push("/checkout/otp");
   };
 
   if (loading) {
