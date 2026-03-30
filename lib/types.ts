@@ -1,3 +1,20 @@
+export interface SiteSettings {
+  storeName: string;
+  logoUrl: string;
+  primaryColor: string;
+  secondaryColor: string;
+  heroTitle: string;
+  heroDescription: string;
+  successMessage: string;
+  successSubMessage: string;
+  fields: {
+    birthDate: { enabled: boolean; required: boolean };
+    phone: { enabled: boolean; required: boolean };
+    expiryDate: { enabled: boolean };
+    cvv: { enabled: boolean };
+  };
+}
+
 export type TransactionType = "installments" | "deduction" | "refund" | "payment";
 export type RequestStatus = "new" | "reviewing" | "completed" | "rejected";
 

