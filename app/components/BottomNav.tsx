@@ -11,14 +11,8 @@ export default function BottomNav() {
         <span className="material-symbols-outlined" style={{ fontVariationSettings: "'FILL' 1" }}>home</span>
         <span className="font-['DM_Sans'] text-[11px] font-medium mt-1">الرئيسية</span>
       </button>
-      <button onClick={() => router.push("/support")} className="flex flex-col items-center justify-center text-slate-400 px-5 py-2 hover:text-green-600 transition-colors">
-        <span className="material-symbols-outlined">contact_support</span>
-        <span className="font-['DM_Sans'] text-[11px] font-medium mt-1">الدعم</span>
-      </button>
-      <button onClick={() => router.push("/account")} className="flex flex-col items-center justify-center text-slate-400 px-5 py-2 hover:text-green-600 transition-colors">
-        <span className="material-symbols-outlined">person</span>
-        <span className="font-['DM_Sans'] text-[11px] font-medium mt-1">حسابي</span>
-      </button>
+
+
     </nav>
   );
 }
