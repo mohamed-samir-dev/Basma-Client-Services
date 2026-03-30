@@ -43,7 +43,7 @@ export default function VerifyPage() {
             {/* Logo */}
             <div className="relative w-36 h-36 sm:w-48 sm:h-48 rounded-2xl overflow-hidden">
               <Image
-                src="/ChatGPT Image Mar 29, 2026, 07_38_12 PM.webp"
+                src="/hero-image.webp"
                 alt="شعار بصمة هاتفي المعتمد"
                 fill
                 className="object-contain p-3"
