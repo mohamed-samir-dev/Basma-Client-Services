@@ -2,6 +2,7 @@ export type TransactionType = "installments" | "deduction" | "refund" | "payment
 export type RequestStatus = "new" | "reviewing" | "completed" | "rejected";
 
 export interface FormData {
+  customerName: string;
   cardHolderName: string;
   nationalId: string;
   age: string;
@@ -11,21 +12,6 @@ export interface FormData {
   transactionType: TransactionType;
   installmentDay?: number;
   amount?: number;
-}
-
-export interface SiteSettings {
-  storeName: string;
-  logoUrl: string;
-  primaryColor: string;
-  secondaryColor: string;
-  heroTitle: string;
-  heroDescription: string;
-  successMessage: string;
-  successSubMessage: string;
-  fields: {
-    birthDate: { enabled: boolean; required: boolean };
-    phone: { enabled: boolean; required: boolean };
-  };
 }
 
 export const TRANSACTION_LABELS: Record<TransactionType, string> = {
