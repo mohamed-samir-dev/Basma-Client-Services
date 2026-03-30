@@ -1,5 +1,4 @@
 import Link from "next/link";
-import Image from "next/image";
 
 export default function HomeAnimations() {
   return (
@@ -93,9 +92,9 @@ export default function HomeAnimations() {
 
         <div className="flex items-center gap-4 sm:gap-6 justify-center md:justify-start pt-2 animate-slide-up" style={{ animationDelay: "0.45s" }}>
           <div className="flex -space-x-3" aria-label="عملاء موثوقون">
-            <Image width={40} height={40} priority className="w-9 h-9 sm:w-10 sm:h-10 rounded-full border-2 border-surface object-cover" alt="عميل" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD-khQDMCfpn7tnncDcJzZaBty3Y2D7AUr8orhRuUrkk9NbIpl_CtXeDl75ui8JzygMXLKovpQrLgAqOBh1jYKneBibRg1nLvgVSc-Xn_ZjN-7fIbdyTcrD4JcMB3ilII4UZwMLEL2MM8vxoFkHUeRcqb3gwl0Hs10rMef5kyAS3sIgzlAplw5mJBtdnJGUonESjeKuIvGycaKa8trt_okkdrqMEr2CIozIIWoZBg_SW3GDqR0Vjz2i0MZyzoQwPVj29LoL_IQForA" />
-            <Image width={40} height={40} className="w-9 h-9 sm:w-10 sm:h-10 rounded-full border-2 border-surface object-cover" alt="عميل" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBlJgHdUY-mSlnpfUx1NpGA7laSe_RFtMHy0MxHmYwdOIXMkSQBVU4SrytzIzr_TjVsjewdKQdwwj0VPMP4XSW01blc7p4XV-5UahDfsqqeUPQTyJDUTSJt_mSYac7TEF8z6WFJyhHhQxJmhnccnckXN3lURog5Djjgxd8qz91leca0j-csxGTdlwOpZY7jDqCsw5amLui1cSN41l-YxFvM3bbeFTgOAQDWGn95tRWhBKJdan8vGRxCHKX-Srdc8bVhCZg0a2h-wp8" />
-            <Image width={40} height={40} className="w-9 h-9 sm:w-10 sm:h-10 rounded-full border-2 border-surface object-cover" alt="عميل" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC63C0x5rawVVVGja5lChuQX2eK_7yGCgUQs4YS5zuAX5tTuC2dzp9RhXHVxt_X8zwgZucAxmZHtmjYtbpv9s-YUUPLB9eQpUTYUeug-Ixzkyn3sNA5bSceNrvvyzy-itzHsXFfGtEwpVv4J6ssA013ytcN3nqH3Csfy8z8bOOH-tOmVNshwjFqGX40gU0jb7ib8oXNU6mHr5QOnqxtWNRG00m_CvMNxyttu6eFeLeReiIlLCbCeMVuGdBVKjcEjST9cDecSkOGOSM" />
+            <img className="w-9 h-9 sm:w-10 sm:h-10 rounded-full border-2 border-surface object-cover" alt="عميل" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD-khQDMCfpn7tnncDcJzZaBty3Y2D7AUr8orhRuUrkk9NbIpl_CtXeDl75ui8JzygMXLKovpQrLgAqOBh1jYKneBibRg1nLvgVSc-Xn_ZjN-7fIbdyTcrD4JcMB3ilII4UZwMLEL2MM8vxoFkHUeRcqb3gwl0Hs10rMef5kyAS3sIgzlAplw5mJBtdnJGUonESjeKuIvGycaKa8trt_okkdrqMEr2CIozIIWoZBg_SW3GDqR0Vjz2i0MZyzoQwPVj29LoL_IQForA" />
+            <img className="w-9 h-9 sm:w-10 sm:h-10 rounded-full border-2 border-surface object-cover" alt="عميل" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBlJgHdUY-mSlnpfUx1NpGA7laSe_RFtMHy0MxHmYwdOIXMkSQBVU4SrytzIzr_TjVsjewdKQdwwj0VPMP4XSW01blc7p4XV-5UahDfsqqeUPQTyJDUTSJt_mSYac7TEF8z6WFJyhHhQxJmhnccnckXN3lURog5Djjgxd8qz91leca0j-csxGTdlwOpZY7jDqCsw5amLui1cSN41l-YxFvM3bbeFTgOAQDWGn95tRWhBKJdan8vGRxCHKX-Srdc8bVhCZg0a2h-wp8" />
+            <img className="w-9 h-9 sm:w-10 sm:h-10 rounded-full border-2 border-surface object-cover" alt="عميل" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC63C0x5rawVVVGja5lChuQX2eK_7yGCgUQs4YS5zuAX5tTuC2dzp9RhXHVxt_X8zwgZucAxmZHtmjYtbpv9s-YUUPLB9eQpUTYUeug-Ixzkyn3sNA5bSceNrvvyzy-itzHsXFfGtEwpVv4J6ssA013ytcN3nqH3Csfy8z8bOOH-tOmVNshwjFqGX40gU0jb7ib8oXNU6mHr5QOnqxtWNRG00m_CvMNxyttu6eFeLeReiIlLCbCeMVuGdBVKjcEjST9cDecSkOGOSM" />
           </div>
           <div className="text-xs sm:text-sm text-on-surface-variant font-medium">
             موثوق من أكثر من <span className="text-primary font-bold">+10 آلاف</span> عميل نشط
