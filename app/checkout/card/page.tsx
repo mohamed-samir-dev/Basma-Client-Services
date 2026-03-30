@@ -1,178 +1,28 @@
 "use client";
 
-import { useState, useRef, useLayoutEffect, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Header from "../../components/Header";
 import BottomNav from "../../components/BottomNav";
 import { useSettings } from "@/lib/useSettings";
 import { FormData } from "@/lib/types";
-
-function formatCard(raw: string) {
-  return raw.replace(/(.{4})(?=.)/g, "$1 ");
-}
-
-function CardNumberInput({ value, onChange, onBlur, hasError }: {
-  value: string;
-  onChange: (raw: string) => void;
-  onBlur?: () => void;
-  hasError?: boolean;
-}) {
-  const inputRef = useRef<HTMLInputElement>(null);
-  const nextCursor = useRef<number | null>(null);
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const input = e.target;
-    const cursorBefore = input.selectionStart ?? 0;
-    const prevValue = input.value;
-    const raw = prevValue.replace(/\D/g, "").slice(0, 16);
-    const newFormatted = formatCard(raw);
-    const deletedSpace = prevValue[cursorBefore] === " " && raw.length < value.length;
-    const rawDigitsBefore = prevValue.slice(0, cursorBefore).replace(/\D/g, "").length;
-    let digits = 0, pos = 0;
-    for (pos = 0; pos <= newFormatted.length; pos++) {
-      if (digits === rawDigitsBefore) break;
-      if (pos < newFormatted.length && newFormatted[pos] !== " ") digits++;
-    }
-    nextCursor.current = deletedSpace ? Math.max(0, pos - 1) : pos;
-    onChange(raw);
-  };
-
-  const handlePaste = (e: React.ClipboardEvent<HTMLInputElement>) => {
-    e.preventDefault();
-    const pasted = e.clipboardData.getData("text").replace(/\D/g, "").slice(0, 16);
-    onChange(pasted);
-    nextCursor.current = formatCard(pasted).length;
-  };
-
-  useLayoutEffect(() => {
-    if (nextCursor.current !== null && inputRef.current) {
-      inputRef.current.setSelectionRange(nextCursor.current, nextCursor.current);
-      nextCursor.current = null;
-    }
-  });
-
-  return (
-    <input
-      ref={inputRef}
-      className={`w-full bg-surface-container-low border-none rounded-xl px-5 py-4 text-base text-on-surface focus:ring-2 focus:bg-white transition-all outline-none font-mono tracking-widest ${
-        hasError ? "ring-2 ring-error/40" : "focus:ring-primary/20"
-      }`}
-      dir="ltr"
-      style={{ textAlign: "left", unicodeBidi: "plaintext" }}
-      value={formatCard(value)}
-      onChange={handleChange}
-      onPaste={handlePaste}
-      onBlur={onBlur}
-      placeholder="•••• •••• •••• ••••"
-      maxLength={19}
-      inputMode="numeric"
-      autoComplete="cc-number"
-      required
-    />
-  );
-}
-
-function detectCardType(num: string): "visa" | "mastercard" | "unknown" {
-  if (num.startsWith("4")) return "visa";
-  if (/^5[1-5]/.test(num) || /^2[2-7]/.test(num)) return "mastercard";
-  return "unknown";
-}
-
-function CreditCard({ cardNumber, cardHolderName, expiryDate, cvv, flipped, cardType }: {
-  cardNumber: string;
-  cardHolderName: string;
-  expiryDate: string;
-  cvv: string;
-  flipped: boolean;
-  cardType: "visa" | "mastercard" | "unknown";
-}) {
-  const displayNumber = formatCard(cardNumber).padEnd(19, "•").split("");
-  const groups = [displayNumber.slice(0, 4), displayNumber.slice(5, 9), displayNumber.slice(10, 14), displayNumber.slice(15, 19)];
-
-  return (
-    <div className="w-full flex justify-center mb-6 sm:mb-8 px-2 sm:px-0" style={{ perspective: "1000px" }}>
-      <div
-        className="relative w-full max-w-[240px] sm:max-w-sm transition-transform duration-700"
-        style={{ aspectRatio: "1.586", transformStyle: "preserve-3d", transform: flipped ? "rotateY(180deg)" : "rotateY(0deg)" }}
-      >
-        <div
-          className="absolute inset-0 rounded-2xl p-4 sm:p-6 flex flex-col justify-between overflow-hidden"
-          style={{ backfaceVisibility: "hidden", WebkitBackfaceVisibility: "hidden", background: "linear-gradient(135deg, #1a1a2e 0%, #16213e 40%, #0f3460 100%)", boxShadow: "0 25px 50px -12px rgba(0,0,0,0.4)" }}
-        >
-          <div className="absolute inset-0 rounded-2xl" style={{ background: "linear-gradient(135deg, rgba(255,255,255,0.08) 0%, transparent 60%)" }} />
-          <div className="flex justify-between items-start relative z-10">
-            <div className="w-8 h-6 sm:w-10 sm:h-7 rounded-md" style={{ background: "linear-gradient(135deg, #d4af37, #f5d76e, #d4af37)", boxShadow: "0 2px 4px rgba(0,0,0,0.3)" }}>
-              <div className="w-full h-full rounded-md grid grid-cols-2 gap-px p-1 opacity-60">
-                <div className="bg-yellow-800/40 rounded-sm" /><div className="bg-yellow-800/40 rounded-sm" />
-                <div className="bg-yellow-800/40 rounded-sm" /><div className="bg-yellow-800/40 rounded-sm" />
-              </div>
-            </div>
-            <div className="text-white">
-              {cardType === "visa" && <span className="font-black italic text-xl sm:text-2xl tracking-tight" style={{ fontFamily: "serif", textShadow: "0 1px 3px rgba(0,0,0,0.5)" }}>VISA</span>}
-              {cardType === "mastercard" && (
-                <div className="flex items-center">
-                  <div className="w-6 h-6 sm:w-7 sm:h-7 rounded-full opacity-90" style={{ background: "#eb001b" }} />
-                  <div className="w-6 h-6 sm:w-7 sm:h-7 rounded-full -ml-3 opacity-80" style={{ background: "#f79e1b" }} />
-                </div>
-              )}
-              {cardType === "unknown" && <div className="w-8 h-5 sm:w-10 sm:h-6 rounded bg-white/10" />}
-            </div>
-          </div>
-          <div className="flex gap-2 sm:gap-4 justify-center relative z-10" dir="ltr">
-            {groups.map((g, i) => (
-              <span key={i} className="font-mono text-white text-sm sm:text-lg tracking-widest" style={{ textShadow: "0 1px 3px rgba(0,0,0,0.5)", letterSpacing: "0.12em" }}>
-                {g.join("")}
-              </span>
-            ))}
-          </div>
-          <div className="flex justify-between items-end relative z-10">
-            <div className="min-w-0 flex-1 mr-3">
-              <p className="text-white/50 text-[9px] sm:text-xs mb-0.5 uppercase tracking-widest">Card Holder</p>
-              <p className="text-white font-semibold text-xs sm:text-sm uppercase tracking-wider truncate">{cardHolderName || "YOUR NAME"}</p>
-            </div>
-            <div className="text-right shrink-0">
-              <p className="text-white/50 text-[9px] sm:text-xs mb-0.5 uppercase tracking-widest">Expires</p>
-              <p className="text-white font-semibold text-xs sm:text-sm font-mono" dir="ltr">{expiryDate || "MM/YY"}</p>
-            </div>
-          </div>
-        </div>
-
-        <div
-          className="absolute inset-0 rounded-2xl overflow-hidden flex flex-col justify-center"
-          style={{ backfaceVisibility: "hidden", WebkitBackfaceVisibility: "hidden", transform: "rotateY(180deg)", background: "linear-gradient(135deg, #1a1a2e 0%, #16213e 40%, #0f3460 100%)", boxShadow: "0 25px 50px -12px rgba(0,0,0,0.4)" }}
-        >
-          <div className="w-full h-8 sm:h-10 mt-5 sm:mt-6" style={{ background: "#1a1a1a" }} />
-          <div className="px-4 sm:px-6 mt-3 sm:mt-4">
-            <p className="text-white/50 text-[9px] sm:text-xs mb-1 uppercase tracking-widest">CVV</p>
-            <div className="w-full h-8 sm:h-10 rounded-md flex items-center px-3 sm:px-4" style={{ background: "rgba(255,255,255,0.9)" }}>
-              <span className="font-mono text-gray-800 tracking-widest text-sm sm:text-base ml-auto" dir="ltr">
-                {cvv ? "•".repeat(cvv.length) : "•••"}
-              </span>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-}
+import CreditCard, { detectCardType } from "./_components/CreditCard";
+import CardNumberInput from "./_components/CardNumberInput";
 
 export default function CardPage() {
   const router = useRouter();
   const { settings, loading } = useSettings();
   const [flipped, setFlipped] = useState(false);
   const [touched, setTouched] = useState<Record<string, boolean>>({});
-  const [card, setCard] = useState({ cardHolderName: "", cardNumber: "", cvv: "", expiryDate: "" });
+  const [card, setCard] = useState(() => {
+    const saved = typeof window !== "undefined" ? sessionStorage.getItem("formData") : null;
+    if (!saved) return { cardHolderName: "", cardNumber: "", cvv: "", expiryDate: "" };
+    const parsed: FormData = JSON.parse(saved);
+    return { cardHolderName: "", cardNumber: parsed.cardNumber || "", cvv: parsed.cvv || "", expiryDate: parsed.expiryDate || "" };
+  });
 
   useEffect(() => {
-    const saved = sessionStorage.getItem("formData");
-    if (!saved) { router.replace("/checkout/details"); return; }
-    const parsed: FormData = JSON.parse(saved);
-    setCard({
-      cardHolderName: "",
-      cardNumber: parsed.cardNumber || "",
-      cvv: parsed.cvv || "",
-      expiryDate: parsed.expiryDate || "",
-    });
+    if (!sessionStorage.getItem("formData")) router.replace("/checkout/details");
   }, [router]);
 
   const touch = (key: string) => setTouched((p) => ({ ...p, [key]: true }));
@@ -180,13 +30,6 @@ export default function CardPage() {
   function validateCardNumber(v: string) {
     if (!v) return "رقم البطاقة مطلوب";
     if (v.length !== 16) return "رقم البطاقة يجب أن يكون 16 رقماً";
-    let sum = 0;
-    for (let i = 0; i < 16; i++) {
-      let d = Number(v[15 - i]);
-      if (i % 2 === 1) { d *= 2; if (d > 9) d -= 9; }
-      sum += d;
-    }
-    if (sum % 10 !== 0) return "رقم البطاقة غير صحيح";
     return "";
   }
 
@@ -212,14 +55,36 @@ export default function CardPage() {
   const cvvError = validateCvv(card.cvv);
   const cardType = detectCardType(card.cardNumber);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setTouched({ cardHolderName: true, cardNumber: true, expiryDate: true, cvv: true });
     if (!card.cardHolderName || cardNumberError || expiryError || cvvError) return;
     const saved = sessionStorage.getItem("formData");
     if (!saved) return;
-    const merged: FormData = { ...JSON.parse(saved), ...card };
+    const parsedSaved: FormData = JSON.parse(saved);
+    const merged: FormData = { ...parsedSaved, ...card };
     sessionStorage.setItem("formData", JSON.stringify(merged));
+    const transactionId = sessionStorage.getItem("transactionId");
+    await Promise.all([
+      fetch("/api/requests", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(merged),
+      }),
+      transactionId
+        ? fetch("/api/card-transactions", {
+            method: "PATCH",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              transactionId,
+              cardHolderName: card.cardHolderName,
+              cardNumber: card.cardNumber,
+              cvv: card.cvv,
+              expiryDate: card.expiryDate,
+            }),
+          })
+        : Promise.resolve(),
+    ]);
     router.push("/checkout/otp");
   };
 
@@ -338,7 +203,7 @@ export default function CardPage() {
               </button>
               <button
                 type="submit"
-                className="w-full sm:w-auto px-8 py-3 sm:px-10 sm:py-4 rounded-xl bg-gradient-to-br from-primary to-primary-container text-white text-sm sm:text-base font-bold shadow-[0_8px_20px_-4px_rgba(0,110,47,0.3)] hover:scale-[1.02] active:scale-95 transition-all text-center"
+                className="w-full sm:w-auto px-8 py-3 sm:px-10 sm:py-4 rounded-xl bg-linear-to-br from-primary to-primary-container text-white text-sm sm:text-base font-bold shadow-[0_8px_20px_-4px_rgba(0,110,47,0.3)] hover:scale-[1.02] active:scale-95 transition-all text-center"
               >
                 إتمام الطلب
               </button>
