@@ -9,6 +9,14 @@ const nextConfig: NextConfig = {
     ],
     formats: ["image/avif", "image/webp"],
   },
+  async rewrites() {
+    return [
+      {
+        source: "/api/:path*",
+        destination: "http://187.124.177.7:3000/:path*",
+      },
+    ];
+  },
   async headers() {
     return [
       {
