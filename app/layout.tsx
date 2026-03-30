@@ -78,7 +78,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=block" rel="stylesheet" />
-        <style>{`.material-symbols-outlined { visibility: hidden; } .fonts-loaded .material-symbols-outlined { visibility: visible; }`}</style>
+        <script dangerouslySetInnerHTML={{ __html: `document.fonts.ready.then(() => document.documentElement.classList.add('fonts-loaded'))` }} />
       </head>
       <body suppressHydrationWarning className={`${dmSans.variable} ${plusJakarta.variable} bg-surface font-['DM_Sans'] text-on-background min-h-screen flex flex-col`}>
         <Toaster position="top-center" toastOptions={{ duration: 4000 }} />

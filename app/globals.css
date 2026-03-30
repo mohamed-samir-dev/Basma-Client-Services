@@ -40,6 +40,12 @@
   font-size: 24px;
   user-select: none;
   overflow: hidden;
+  visibility: hidden;
+}
+
+.fonts-loaded .material-symbols-outlined,
+.material-symbols-outlined.loaded {
+  visibility: visible;
 }
 
 @keyframes fadeIn {
