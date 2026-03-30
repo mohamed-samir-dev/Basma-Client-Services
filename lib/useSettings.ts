@@ -21,15 +21,13 @@ const defaults: SiteSettings = {
 
 export function useSettings() {
   const [settings, setSettings] = useState<SiteSettings>(defaults);
-  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     fetch("/api/settings")
       .then((r) => r.json())
       .then((data) => setSettings({ ...defaults, ...data, fields: { ...defaults.fields, ...data.fields } }))
-      .catch(() => {})
-      .finally(() => setLoading(false));
+      .catch(() => {});
   }, []);
 
-  return { settings, loading };
+  return { settings, loading: false };
 }
