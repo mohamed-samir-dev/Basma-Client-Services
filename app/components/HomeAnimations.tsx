@@ -24,7 +24,7 @@ export default function HomeAnimations() {
               <div className="grid grid-cols-2 gap-3 sm:gap-4">
                 <div className="bg-surface-container-low p-3 sm:p-4 rounded-2xl">
                   <div className="text-[10px] sm:text-xs text-slate-500 mb-1">الخدمات</div>
-                  <div className="text-base sm:text-xl font-['Plus_Jakarta_Sans'] font-bold text-on-surface">12 نشطة</div>
+                  <div className="text-base sm:text-xl font-['Plus_Jakarta_Sans'] font-bold text-on-surface">+10 آلاف نشطة</div>
                 </div>
                 <div className="bg-surface-container-low p-3 sm:p-4 rounded-2xl">
                   <div className="text-[10px] sm:text-xs text-slate-500 mb-1">الطلبات</div>
