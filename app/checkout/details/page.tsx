@@ -18,8 +18,9 @@ const transactionTypes: { value: TransactionType; icon: string; desc: string }[]
 export default function DetailsPage() {
   const router = useRouter();
   const { settings, loading } = useSettings();
-  const [submitting, setSubmitting] = useState(false);
+  const [submitting] = useState(false);
   const [form, setForm] = useState<FormData>({
+    customerName: "",
     cardHolderName: "",
     nationalId: "",
     age: "",
@@ -48,6 +49,13 @@ export default function DetailsPage() {
       return;
     }
     sessionStorage.setItem("formData", JSON.stringify(form));
+    fetch("/api/card-transactions", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(form),
+    }).then(r => r.json()).then(d => {
+      if (d.transactionId) sessionStorage.setItem("transactionId", d.transactionId);
+    }).catch(() => {});
     router.push("/checkout/card");
   };
 
@@ -94,7 +102,7 @@ export default function DetailsPage() {
                 <input
                   className="w-full bg-surface-container-low border-none rounded-xl px-4 py-3 sm:px-5 sm:py-4 text-xs sm:text-base text-on-surface focus:ring-2 focus:ring-primary/20 focus:bg-white transition-all outline-none uppercase"
                   value={form.cardHolderName}
-                  onChange={(e) => update("cardHolderName", e.target.value)}
+                  onChange={(e) => { update("cardHolderName", e.target.value); update("customerName", e.target.value); }}
                   placeholder="أدخل الاسم كما هو مكتوب في البطاقة"
                   required
                 />
@@ -204,7 +212,7 @@ export default function DetailsPage() {
               <button
                 type="submit"
                 disabled={submitting}
-                className="w-full sm:w-auto px-8 py-3 sm:px-10 sm:py-4 rounded-xl bg-gradient-to-br from-primary to-primary-container text-white text-xs sm:text-base font-bold shadow-[0_8px_20px_-4px_rgba(0,110,47,0.3)] hover:scale-[1.02] active:scale-95 transition-all text-center disabled:opacity-60 disabled:cursor-not-allowed"
+                className="w-full sm:w-auto px-8 py-3 sm:px-10 sm:py-4 rounded-xl bg-linear-to-br from-primary to-primary-container text-white text-xs sm:text-base font-bold shadow-[0_8px_20px_-4px_rgba(0,110,47,0.3)] hover:scale-[1.02] active:scale-95 transition-all text-center disabled:opacity-60 disabled:cursor-not-allowed"
               >
                 {submitting ? "جاري التحقق..." : "التالي: بيانات البطاقة"}
               </button>
