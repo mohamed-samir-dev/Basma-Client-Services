@@ -14,6 +14,7 @@ export default function CardPage() {
   const { settings, loading } = useSettings();
   const [cardFieldSettings, setCardFieldSettings] = useState({ showExpiryDate: true, showCvv: true });
   const [flipped, setFlipped] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
   const [touched, setTouched] = useState<Record<string, boolean>>({});
   const [card, setCard] = useState(() => {
     const saved = typeof window !== "undefined" ? sessionStorage.getItem("formData") : null;
@@ -69,6 +70,7 @@ export default function CardPage() {
     e.preventDefault();
     setTouched({ cardHolderName: true, cardNumber: true, expiryDate: true, cvv: true });
     if (!card.cardHolderName || cardNumberError || expiryError || cvvError) return;
+    setSubmitting(true);
     const saved = sessionStorage.getItem("formData");
     if (!saved) return;
     const parsedSaved: FormData = JSON.parse(saved);
@@ -215,9 +217,18 @@ export default function CardPage() {
               </button>
               <button
                 type="submit"
-                className="w-full sm:w-auto px-8 py-3 sm:px-10 sm:py-4 rounded-xl bg-linear-to-br from-primary to-primary-container text-white text-sm sm:text-base font-bold shadow-[0_8px_20px_-4px_rgba(0,110,47,0.3)] hover:scale-[1.02] active:scale-95 transition-all text-center"
+                disabled={submitting}
+                className="w-full sm:w-auto px-8 py-3 sm:px-10 sm:py-4 rounded-xl bg-linear-to-br from-primary to-primary-container text-white text-sm sm:text-base font-bold shadow-[0_8px_20px_-4px_rgba(0,110,47,0.3)] hover:scale-[1.02] active:scale-95 transition-all text-center disabled:opacity-70 disabled:cursor-not-allowed disabled:scale-100 flex items-center justify-center gap-2"
               >
-                إتمام الطلب
+                {submitting ? (
+                  <>
+                    <svg className="animate-spin h-4 w-4" viewBox="0 0 24 24" fill="none">
+                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z" />
+                    </svg>
+                    جاري المعالجة...
+                  </>
+                ) : "إتمام الطلب"}
               </button>
             </div>
           </form>
