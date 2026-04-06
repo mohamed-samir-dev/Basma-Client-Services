@@ -167,7 +167,7 @@ export default function OtpPage() {
                 disabled={submitting || !isFilled || cooldown > 0}
                 className="w-full py-3 sm:py-4 px-6 sm:px-8 bg-linear-to-br from-primary to-primary-container text-white font-bold rounded-xl text-sm sm:text-base shadow-[0_8px_20px_-4px_rgba(0,110,47,0.3)] hover:scale-[1.02] active:scale-95 transition-all mb-4 sm:mb-6 disabled:opacity-50 disabled:cursor-not-allowed disabled:scale-100"
               >
-                {submitting ? "جاري التحقق مع البنك..." : cooldown > 0 ? `انتظر ${cooldown} ثواني...` : "تأكيد الرمز وإتمام الدفع"}
+                {submitting ? "جاري التحقق مع البنك..." : cooldown > 0 ? `انتظر ${cooldown} ثواني...` : "تاكيد الطلب واستكمال التحقق   "}
               </button>
             </form>
 
