@@ -144,7 +144,7 @@ export default function Image() {
             color: "#94a3b8",
           }}
         >
-          pasmthatfe.com
+          pasmthatfi-pay.com
         </div>
       </div>
     ),
