@@ -33,13 +33,13 @@ export const metadata: Metadata = {
     siteName,
     title: `${siteName} | بوابة العملاء`,
     description: siteDescription,
-    images: [{ url: `${siteUrl}/opengraph-image`, width: 1200, height: 630, alt: siteName }],
+    images: [{ url: `${siteUrl}/android-chrome-512x512.png`, width: 512, height: 512, alt: siteName }],
   },
   twitter: {
     card: "summary_large_image",
     title: `${siteName} | بوابة العملاء`,
     description: siteDescription,
-    images: [`${siteUrl}/opengraph-image`],
+    images: [`${siteUrl}/android-chrome-512x512.png`],
   },
   icons: {
     icon: [
