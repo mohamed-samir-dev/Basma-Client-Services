@@ -9,7 +9,7 @@ export default function robots(): MetadataRoute.Robots {
         disallow: ["/admin/", "/api/", "/checkout/"],
       },
     ],
-    sitemap: "https://www.pasmthatfi-pay.com/sitemap.xml",
-    host: "https://www.pasmthatfi-pay.com",
+    sitemap: "https://pasmthatfy-pay.com/sitemap.xml",
+    host: "https://pasmthatfy-pay.com",
   };
 }

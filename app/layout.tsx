@@ -5,7 +5,7 @@ import "./globals.css";
 
 const dmSans = DM_Sans({ subsets: ["latin"], variable: "--font-dm-sans", display: "swap" });
 const plusJakarta = Plus_Jakarta_Sans({ subsets: ["latin"], variable: "--font-plus-jakarta", display: "swap" });
-const siteUrl = "https://www.pasmthatfi-pay.com";
+const siteUrl = "https://pasmthatfy-pay.com";
 const siteName = "بصمة هاتفي المعتمد";
 const siteDescription = "بوابة عملاء بصمة هاتفي المعتمد — منظومة التحقق من مقدرتك على السداد الشهري. نظام استقطاع تلقائي آمن ومرخص من البنك المركزي السعودي.";
 
