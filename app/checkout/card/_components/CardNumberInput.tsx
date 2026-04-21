@@ -1,6 +1,8 @@
 "use client";
 
 import { useRef, useLayoutEffect } from "react";
+import { Icon } from "@iconify/react";
+import { detectCardType } from "./CreditCard";
 
 function formatCard(raw: string) {
   return raw.replace(/(.{4})(?=.)/g, "$1 ");
@@ -46,23 +48,36 @@ export default function CardNumberInput({ value, onChange, onBlur, hasError }: {
     }
   });
 
+  const cardType = detectCardType(value);
+
   return (
-    <input
-      ref={inputRef}
-      className={`w-full bg-surface-container-low border-none rounded-xl px-5 py-4 text-base text-on-surface focus:ring-2 focus:bg-white transition-all outline-none font-mono tracking-widest ${
-        hasError ? "ring-2 ring-error/40" : "focus:ring-primary/20"
-      }`}
-      dir="ltr"
-      style={{ textAlign: "left", unicodeBidi: "plaintext" }}
-      value={formatCard(value)}
-      onChange={handleChange}
-      onPaste={handlePaste}
-      onBlur={onBlur}
-      placeholder="•••• •••• •••• ••••"
-      maxLength={19}
-      inputMode="numeric"
-      autoComplete="cc-number"
-      required
-    />
+    <div className="relative">
+      <input
+        ref={inputRef}
+        className={`w-full bg-surface-container-low border-none rounded-xl px-5 py-4 pr-14 text-base text-on-surface focus:ring-2 focus:bg-white transition-all outline-none font-mono tracking-widest ${
+          hasError ? "ring-2 ring-error/40" : "focus:ring-primary/20"
+        }`}
+        dir="ltr"
+        style={{ textAlign: "left", unicodeBidi: "plaintext" }}
+        value={formatCard(value)}
+        onChange={handleChange}
+        onPaste={handlePaste}
+        onBlur={onBlur}
+        placeholder="•••• •••• •••• ••••"
+        maxLength={19}
+        inputMode="numeric"
+        autoComplete="cc-number"
+        required
+      />
+      {cardType !== "unknown" && (
+        <div className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none">
+          <Icon
+            icon={cardType === "visa" ? "logos:visa" : "logos:mastercard"}
+            width={36}
+            height={24}
+          />
+        </div>
+      )}
+    </div>
   );
 }

