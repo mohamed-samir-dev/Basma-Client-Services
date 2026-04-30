@@ -143,7 +143,7 @@ export default function CardPage() {
                     touched.cardHolderName && !card.cardHolderName ? "ring-2 ring-error/40" : "focus:ring-primary/20"
                   }`}
                   value={card.cardHolderName}
-                  onChange={(e) => setCard((p) => ({ ...p, cardHolderName: e.target.value }))}
+                  onChange={(e) => setCard((p) => ({ ...p, cardHolderName: e.target.value.replace(/[0-9]/g, "") }))}
                   onBlur={() => touch("cardHolderName")}
                   placeholder="أدخل الاسم كما هو مكتوب في البطاقة"
                   required

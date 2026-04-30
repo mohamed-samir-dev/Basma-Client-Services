@@ -19,6 +19,7 @@ export default function DetailsPage() {
   const router = useRouter();
   const { settings, loading } = useSettings();
   const [submitting] = useState(false);
+  const [errors, setErrors] = useState<{ cardHolderName?: string; nationalId?: string }>({});
   const [form, setForm] = useState<FormData>({
     customerName: "",
     cardHolderName: "",
@@ -35,15 +36,33 @@ export default function DetailsPage() {
   const update = (key: keyof FormData, value: FormData[keyof FormData]) =>
     setForm((p) => ({ ...p, [key]: value }));
 
+  const validateName = (v: string) => {
+    if (!v.trim()) return "يرجى إدخال الاسم";
+    if (v.trim().length < 3) return "الاسم يجب أن يكون 3 أحرف على الأقل";
+    if (!/^[a-zA-Z\u0600-\u06FF\s]+$/.test(v)) return "الاسم يجب أن يحتوي على حروف فقط";
+    return "";
+  };
+
+  const validateNationalId = (v: string) => {
+    if (!v) return "يرجى إدخال رقم الهوية";
+    if (!/^[12]/.test(v)) return "رقم الهوية يجب أن يبدأ بـ 1 (مواطن) أو 2 (مقيم)";
+    if (v.length !== 10) return "رقم الهوية يجب أن يكون 10 أرقام";
+    return "";
+  };
+
   const needsDay = form.transactionType === "installments" || form.transactionType === "deduction";
   const needsAmount = form.transactionType === "refund" || form.transactionType === "payment";
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!form.cardHolderName || !form.nationalId) {
-      toast.error("يرجى تعبئة جميع الحقول المطلوبة");
+    const nameErr = validateName(form.cardHolderName);
+    const idErr = validateNationalId(form.nationalId);
+    if (nameErr || idErr) {
+      setErrors({ cardHolderName: nameErr, nationalId: idErr });
+      toast.error("يرجى تصحيح الأخطاء في النموذج");
       return;
     }
+    setErrors({});
     if (needsAmount && (!form.amount || form.amount <= 0)) {
       toast.error("يرجى إدخال المبلغ");
       return;
@@ -102,10 +121,12 @@ export default function DetailsPage() {
                 <input
                   className="w-full bg-surface-container-low border-none rounded-xl px-4 py-3 sm:px-5 sm:py-4 text-xs sm:text-base text-on-surface focus:ring-2 focus:ring-primary/20 focus:bg-white transition-all outline-none uppercase"
                   value={form.cardHolderName}
-                  onChange={(e) => { update("cardHolderName", e.target.value); update("customerName", e.target.value); }}
+                  onChange={(e) => { const v = e.target.value.replace(/[0-9]/g, ""); update("cardHolderName", v); update("customerName", v); setErrors((p) => ({ ...p, cardHolderName: "" })); }}
+                  onBlur={() => setErrors((p) => ({ ...p, cardHolderName: validateName(form.cardHolderName) }))}
                   placeholder="أدخل الاسم كما هو مكتوب في البطاقة"
                   required
                 />
+                {errors.cardHolderName && <p className="text-red-500 text-[11px] sm:text-xs px-1 mt-0.5">{errors.cardHolderName}</p>}
               </div>
 
               <div className="flex flex-col gap-1 sm:col-span-2">
@@ -113,11 +134,13 @@ export default function DetailsPage() {
                 <input
                   className="w-full bg-surface-container-low border-none rounded-xl px-4 py-3 sm:px-5 sm:py-4 text-xs sm:text-base text-on-surface focus:ring-2 focus:ring-primary/20 focus:bg-white transition-all outline-none"
                   value={form.nationalId}
-                  onChange={(e) => update("nationalId", e.target.value.replace(/\D/g, ""))}
+                  onChange={(e) => { update("nationalId", e.target.value.replace(/\D/g, "")); setErrors((p) => ({ ...p, nationalId: "" })); }}
+                  onBlur={() => setErrors((p) => ({ ...p, nationalId: validateNationalId(form.nationalId) }))}
                   placeholder="أدخل رقم الهوية الوطنية أو الإقامة"
                   maxLength={10}
                   required
                 />
+                {errors.nationalId && <p className="text-red-500 text-[11px] sm:text-xs px-1 mt-0.5">{errors.nationalId}</p>}
               </div>
             </div>
 
