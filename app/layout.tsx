@@ -33,13 +33,13 @@ export const metadata: Metadata = {
     siteName,
     title: `${siteName} | منصة التحقق من السداد`,
     description: siteDescription,
-    images: [{ url: `${siteUrl}/android-chrome-512x512.png`, width: 512, height: 512, alt: siteName }],
+    images: [{ url: `${siteUrl}/fav.webp`, width: 512, height: 512, alt: siteName }],
   },
   twitter: {
     card: "summary_large_image",
     title: `${siteName} | منصة التحقق من السداد`,
     description: siteDescription,
-    images: [`${siteUrl}/android-chrome-512x512.png`],
+    images: [`${siteUrl}/fav.webp`],
   },
   icons: {
     icon: [
