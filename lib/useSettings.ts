@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { SiteSettings } from "@/lib/types";
 
 const defaults: SiteSettings = {
-  storeName: "بصمه هاتفي المعتمد",
+  storeName: "التحقق الموثوق",
   logoUrl: "",
   primaryColor: "#2563eb",
   secondaryColor: "#1e40af",
