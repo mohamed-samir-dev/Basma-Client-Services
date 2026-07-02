@@ -7,11 +7,11 @@ export default function Footer({ storeName }: { storeName?: string }) {
         <div className="flex items-center gap-2 text-slate-400">
           <span className="material-symbols-outlined text-sm" aria-hidden="true">info</span>
           <p className="text-sm font-medium">
-            هذه البوابة تابعة لـ {storeName || "بصمة هاتفي المعتمد"} ومخصصة للعملاء الحاليين فقط.
+            هذه المنصة تابعة لـ {storeName || "التحقق الموثوق"} ومخصصة للتحقق من مقدرتك على السداد الشهري.
           </p>
         </div>
 <p className="text-[10px] text-slate-400 pt-2 opacity-60">
-          <span>© {new Date().getFullYear()} بصمة هاتفي المعتمد. جميع الحقوق محفوظة.</span>
+          <span>© {new Date().getFullYear()} التحقق الموثوق. جميع الحقوق محفوظة.</span>
         </p>
       </div>
     </footer>

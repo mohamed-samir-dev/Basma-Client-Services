@@ -5,13 +5,13 @@ import BottomNav from "./components/BottomNav";
 import HomeAnimations from "./components/HomeAnimations";
 
 export const metadata: Metadata = {
-  title: "بصمة هاتفي المعتمد | بوابة العملاء",
-  description: "بوابة عملاء بصمة هاتفي المعتمد — منظومة التحقق من مقدرتك على السداد الشهري. نظام استقطاع تلقائي آمن ومرخص من البنك المركزي السعودي.",
+  title: "التحقق الموثوق | منصة التحقق من السداد",
+  description: "منصة التحقق من مقدرتك على سداد الاستقطاع الشهري — تحقق من رصيدك وقدرتك على السداد بأمان وسهولة.",
   alternates: { canonical: "https://pasmthatfe.com" },
   openGraph: {
     url: "https://pasmthatfe.com",
-    title: "بصمة هاتفي المعتمد | بوابة العملاء",
-    description: "منظومة التحقق من مقدرتك على السداد الشهري. نظام استقطاع تلقائي آمن ومرخص من البنك المركزي السعودي.",
+    title: "التحقق الموثوق | منصة التحقق من السداد",
+    description: "منصة التحقق من مقدرتك على سداد الاستقطاع الشهري — تحقق من رصيدك وقدرتك على السداد بأمان وسهولة.",
   },
 };
 

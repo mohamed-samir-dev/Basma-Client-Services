@@ -6,17 +6,17 @@ import "./globals.css";
 const dmSans = DM_Sans({ subsets: ["latin"], variable: "--font-dm-sans", display: "swap" });
 const plusJakarta = Plus_Jakarta_Sans({ subsets: ["latin"], variable: "--font-plus-jakarta", display: "swap" });
 const siteUrl = "https://pasmthatfy-pay.com";
-const siteName = "بصمة هاتفي المعتمد";
-const siteDescription = "بوابة عملاء بصمة هاتفي المعتمد — منظومة التحقق من مقدرتك على السداد الشهري. نظام استقطاع تلقائي آمن ومرخص من البنك المركزي السعودي.";
+const siteName = "التحقق الموثوق";
+const siteDescription = "منصة التحقق من مقدرتك على السداد الشهري — تحقق من رصيدك وقدرتك على الاستقطاع الشهري بأمان وسهولة. مرخص من البنك المركزي السعودي.";
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: {
-    default: `${siteName} | بوابة العملاء`,
+    default: `${siteName} | منصة التحقق من السداد`,
     template: `%s | ${siteName}`,
   },
   description: siteDescription,
-  keywords: ["بصمة هاتفي", "بوابة العملاء", "السداد الشهري", "الاستقطاع التلقائي", "التحقق المالي", "البنك المركزي السعودي", "أقساط شهرية"],
+  keywords: ["التحقق الموثوق", "منصة التحقق", "السداد الشهري", "الاستقطاع التلقائي", "التحقق المالي", "رصيد الاستقطاع", "البنك المركزي السعودي", "أقساط شهرية"],
   authors: [{ name: siteName, url: siteUrl }],
   creator: siteName,
   publisher: siteName,
@@ -31,26 +31,22 @@ export const metadata: Metadata = {
     locale: "ar_SA",
     url: siteUrl,
     siteName,
-    title: `${siteName} | بوابة العملاء`,
+    title: `${siteName} | منصة التحقق من السداد`,
     description: siteDescription,
     images: [{ url: `${siteUrl}/android-chrome-512x512.png`, width: 512, height: 512, alt: siteName }],
   },
   twitter: {
     card: "summary_large_image",
-    title: `${siteName} | بوابة العملاء`,
+    title: `${siteName} | منصة التحقق من السداد`,
     description: siteDescription,
     images: [`${siteUrl}/android-chrome-512x512.png`],
   },
   icons: {
     icon: [
-      { url: "/favicon-16x16.png", sizes: "16x16", type: "image/png" },
-      { url: "/favicon-32x32.png", sizes: "32x32", type: "image/png" },
+      { url: "/fav.webp", type: "image/webp" },
     ],
-    apple: "/apple-touch-icon.png",
-    other: [
-      { rel: "android-chrome-192x192", url: "/android-chrome-192x192.png" },
-      { rel: "android-chrome-512x512", url: "/android-chrome-512x512.png" },
-    ],
+    apple: "/fav.webp",
+    shortcut: "/fav.webp",
   },
   manifest: "/site.webmanifest",
   verification: {},

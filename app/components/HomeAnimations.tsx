@@ -14,7 +14,7 @@ export default function HomeAnimations() {
               </div>
               <div className="text-right">
                 <div className="text-[9px] sm:text-[10px] font-bold uppercase tracking-widest text-slate-400 mb-1">الحالة</div>
-                <div className="px-2 py-0.5 sm:px-3 sm:py-1 bg-green-50 text-green-700 text-[10px] sm:text-xs font-bold rounded-full border border-green-100">البوابة نشطة</div>
+                <div className="px-2 py-0.5 sm:px-3 sm:py-1 bg-green-50 text-green-700 text-[10px] sm:text-xs font-bold rounded-full border border-green-100">المنصة نشطة</div>
               </div>
             </div>
             <div className="space-y-5 sm:space-y-6">
@@ -63,16 +63,16 @@ export default function HomeAnimations() {
       <div className="order-1 md:order-1 space-y-6 sm:space-y-8 text-center md:text-right">
         <div className="space-y-3 sm:space-y-4">
           <h1 className="font-['Plus_Jakarta_Sans'] text-2xl sm:text-4xl lg:text-5xl font-extrabold text-on-background leading-[1.2] animate-slide-up">
-            بوابة عملاء بصمة هاتفي المعتمد
+            التحقق الموثوق
           </h1>
           <p className="text-base sm:text-xl lg:text-2xl font-medium text-primary/80 leading-relaxed animate-slide-up" style={{ animationDelay: "0.15s" }}>
-            منظومة التحقق من <span className="font-bold text-primary">مقدرتك على السداد الشهري</span>
+            منصة التحقق من <span className="font-bold text-primary">مقدرتك على سداد الاستقطاع الشهري</span>
           </p>
           <p className="text-xs sm:text-base text-on-surface-variant/70 max-w-md leading-relaxed mx-auto md:mx-0 animate-slide-up" style={{ animationDelay: "0.25s" }}>
-            هذه البوابة مخصصة حصرياً لعملاء بصمة هاتفي المعتمد لإدارة خدماتهم بأمان وكفاءة.
+            تحقق من رصيدك وقدرتك على الالتزام بالأقساط الشهرية قبل ما تبدأ أي معاملة.
           </p>
           <p className="text-xs sm:text-base text-on-surface-variant/70 max-w-md leading-relaxed mx-auto md:mx-0 animate-slide-up" style={{ animationDelay: "0.32s" }}>
-            نظام استقطاع تلقائي في التاريخ الذي تختاره <span className="font-semibold text-on-surface">لضمان انتظام السداد دون أي تأخير.</span>
+            نظام استقطاع تلقائي في التاريخ اللي تختاره <span className="font-semibold text-on-surface">لضمان انتظام السداد دون أي تأخير.</span>
           </p>
         </div>
 

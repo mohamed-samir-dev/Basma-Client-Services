@@ -4,7 +4,7 @@ import Footer from "@/app/components/Footer";
 
 export const metadata: Metadata = {
   title: "سياسة الخصوصية",
-  description: "سياسة الخصوصية لبوابة عملاء بصمة هاتفي المعتمد",
+  description: "سياسة الخصوصية لمنصة التحقق الموثوق للتحقق من السداد",
 };
 
 export default function PrivacyPage() {
@@ -32,9 +32,9 @@ export default function PrivacyPage() {
           {/* المقدمة */}
           <section id="introduction" className="scroll-mt-32">
             <div className="bg-surface-container-lowest p-10 rounded-xl border border-outline-variant/10" style={{ boxShadow: "0 8px 32px rgba(11,28,48,0.06)" }}>
-              <h2 className="text-3xl font-bold text-on-surface mb-6">مرحباً بك في بصمة هاتفي المعتمد</h2>
+              <h2 className="text-3xl font-bold text-on-surface mb-6">مرحباً بك في التحقق الموثوق</h2>
               <p className="text-secondary leading-relaxed mb-6 text-lg">
-                في بصمة هاتفي المعتمد، خصوصيتك المالية هي أولويتنا القصوى. تصف سياسة الخصوصية هذه كيفية جمع معلوماتك واستخدامها ومشاركتها عند استخدامك لبوابة العملاء. نحن ملتزمون بالشفافية الكاملة وتزويدك بالأدوات اللازمة لإدارة بياناتك بفاعلية.
+                في التحقق الموثوق، خصوصيتك المالية هي أولويتنا القصوى. تصف سياسة الخصوصية هذه كيفية جمع معلوماتك واستخدامها ومشاركتها عند استخدامك للمنصة. نحن ملتزمون بالشفافية الكاملة وتزويدك بالأدوات اللازمة لإدارة بياناتك بفاعلية.
               </p>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-8">
                 <div className="flex items-start gap-4 p-4 rounded-xl bg-surface-container-low">
@@ -66,7 +66,7 @@ export default function PrivacyPage() {
             <div className="space-y-6">
               <div className="bg-surface-container-low p-8 rounded-xl">
                 <h3 className="font-bold text-xl mb-4">المعلومات المقدمة مباشرةً</h3>
-                <p className="text-secondary mb-4">عند التسجيل أو استخدام البوابة، نجمع:</p>
+                <p className="text-secondary mb-4">عند التسجيل أو استخدام المنصة، نجمع:</p>
                 <ul className="space-y-3">
                   {["الاسم وعنوان البريد الإلكتروني ورقم الهاتف", "وثائق الهوية لأغراض التحقق من الهوية (KYC)", "السجل المالي المرتبط بمشترياتك"].map((item) => (
                     <li key={item} className="flex items-center gap-3 text-on-surface">

@@ -6,12 +6,12 @@ import BottomNav from "../components/BottomNav";
 import FeaturesGrid from "./_components/FeaturesGrid";
 
 export const metadata: Metadata = {
-  title: "مميزات بصمة هاتفي المعتمد",
+  title: "مميزات التحقق الموثوق",
   description: "اكتشف منظومة التحقق المالي الكاملة: التحقق من القدرة على السداد، الاستقطاع الشهري التلقائي، الحماية والأمان، سجل المعاملات، والدعم الفوري.",
   alternates: { canonical: "https://pasmthatfe.com/features" },
   openGraph: {
     url: "https://pasmthatfe.com/features",
-    title: "مميزات بصمة هاتفي المعتمد",
+    title: "مميزات التحقق الموثوق",
     description: "منظومة التحقق المالي الكاملة — استقطاع تلقائي، حماية كاملة، ودعم فوري.",
   },
 };
