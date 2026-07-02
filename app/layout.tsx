@@ -60,7 +60,7 @@ const jsonLd = {
   description: siteDescription,
   areaServed: { "@type": "Country", name: "Saudi Arabia" },
   availableLanguage: "Arabic",
-  logo: `${siteUrl}/android-chrome-512x512.png`,
+  logo: `${siteUrl}/fav.webp`,
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
