@@ -33,9 +33,20 @@ export default function CardPage() {
 
   const touch = (key: string) => setTouched((p) => ({ ...p, [key]: true }));
 
+  function luhn(v: string) {
+    let sum = 0;
+    for (let i = 0; i < v.length; i++) {
+      let d = parseInt(v[v.length - 1 - i]);
+      if (i % 2 === 1) { d *= 2; if (d > 9) d -= 9; }
+      sum += d;
+    }
+    return sum % 10 === 0;
+  }
+
   function validateCardNumber(v: string) {
     if (!v) return "رقم البطاقة مطلوب";
     if (v.length !== 16) return "رقم البطاقة يجب أن يكون 16 رقماً";
+    if (!luhn(v)) return "رقم البطاقة غير صحيح";
     return "";
   }
 
